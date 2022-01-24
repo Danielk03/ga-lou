@@ -12,3 +12,4 @@
 //return $pdo;
 
 echo 'hello';
+echo 'test';
