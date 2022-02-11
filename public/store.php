@@ -5,14 +5,14 @@ var_dump($_POST);
 $productTitle = $_POST["productTitle"] ?? "Namn saknas";
 $productDescription = $_POST["productDescription"] ?? "Beskrivning saknas";
 $productTypeId = $_POST["productTypeId"] ?? "Fel id";
-$userId = 10;
 $productId = random_int(0, 100000);
 
 $sql = <<<EOD
-insert into products (productTitle, productDescription, productTypeId, userId, productId) 
-VALUES(?,?,?,?,?) 
+insert into products (productTitle, productDescription, productTypeId, productId) 
+VALUES(?,?,?,?) 
 EOD;
 
 $stmt = db()->prepare($sql);
-$stmt->execute([$productTitle, $productDescription, $productTypeId, $userId, $productId]);
+$stmt->execute([$productTitle, $productDescription, $productTypeId, $productId]);
 var_dump($sql);
+header("location: /");

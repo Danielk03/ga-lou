@@ -24,7 +24,7 @@ var_dump($productTypes)
 <body>
 
 <form action="store.php" method="post">
-    <select name="productTypeId" id="">
+    <label for=""></label><select name="productTypeId" id="">
         <?php foreach ($productTypes as $productType){
 
             echo '<option value="'. $productType->productTypeId.'">'. $productType->productTypeName.'</option>';

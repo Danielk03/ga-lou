@@ -1,54 +1,61 @@
 <?php
 require_once "../App/functions.php";
 
-getProductId();
+$rules = array(
+    'productId'   => [
+        'filter' => FILTER_VALIDATE_INT
+    ],
+    'productTitle'   => FILTER_SANITIZE_STRING,
+    'productDescription'   => FILTER_SANITIZE_STRING,
+    'productTypeId'   => [
+        'filter' => FILTER_VALIDATE_INT,
+        'options' => ['min_range'=>0, 'max_range'=>3]
 
-$rules = [
-    'productTitle' => FILTER_SANITIZE_STRING,
-    'productDescription' => FILTER_SANITIZE_STRING,
-    'productTypeId' => FILTER_VALIDATE_INT,
-];
-$validatedInput = filter_input_array(INPUT_POST, $rules);
+    ]
+);
+$validateInput = filter_input_array(INPUT_POST, $rules);
 
-$productId = $product ?? 'No product';
-$newProductTitle = $validatedInput['productTitle'] ?? null;
-$newProductDescription = $validatedInput['productDescription'] ?? null;
-$newProductTypeId = $validatedInput['productTypeId'] ?? null;
+$id = filter_input(INPUT_GET,'productId',FILTER_SANITIZE_STRING);
+if (!$id){
+    redirectHome();
+}
 
 $errors = [];
+if($validateInput["productTitle"]){
+    $title = $validateInput["productTitle"];
+} else {
+    $errors[] = 'Det blev ett internt fel.';
+}
+if($validateInput["productDescription"]){
+    $description = $validateInput["productDescription"];
+} else {
+    $errors[] = 'Det blev ett internt fel.';
+}
+if($validateInput["productTypeId"]){
+    $typeId = $validateInput["productTypeId"];
+} else {
+    $errors[] = 'Det blev ett internt fel.';
+}
+var_dump($id);
+var_dump($typeId);
+var_dump($title);
+var_dump($description);
 
-if ($validatedInput['productTitle']){
-    $newProductTitle = $validatedInput['productTitle'];
-} else{
-    $errors[] = 'Felaktigt produktnamn';
-}
-if ($validatedInput['productDescription']){
-    $newProductDescription = $validatedInput['productDescription'];
-} else{
-    $errors[] = 'Felaktig beskrivning';
-}
-if ($validatedInput['productTypeId']){
-    $newProductTypeId = $validatedInput['productTypeId'];
-} else{
-    $errors[] = 'felaktig produktkategori';
-}
-if (count($errors)){
+if(count($errors)){
     $_SESSION["errors"] = $errors;
-    $_SESSION["feilds"] = $_POST;
-    redirectBack();
+    $_SESSION["fields"] = $_POST;
+    echo  "fel!!";
     exit();
 }
-var_dump($errors);
-var_dump($newProductTitle);
-var_dump($newProductTypeId);
-var_dump($newProductDescription);
 
-$productUpdate = <<<EOD
-UPDATE  products 
-set productTitle=?, productDescription=?, productTypeId=?
-where productId = ?
+$updateProduct = <<<EOD
+UPDATE products
+SET productTitle = ?,
+    productDescription = ?,
+    productTypeId = ? 
+WHERE productId = ? 
 EOD;
 
-$stmt = db()->prepare($productUpdate);
-$stmt->execute([$newProductTitle, $newProductDescription, $newProductTypeId, $productId]);
-redirectHome();
+$stmt = db()->prepare($updateProduct);
+$stmt->execute([$title, $description, $typeId, $id]);
+header("location:/");

@@ -32,7 +32,7 @@ SimpleRouter::start();
 
 function db():PDO
 {
-    $host = "192.168.250.56";
+    $host = "192.168.250.74";
     $db = "ga-lou";
     $user = "ga-lou";
     $password = "rödbrunrånarluva";
