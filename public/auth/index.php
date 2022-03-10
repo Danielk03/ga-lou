@@ -1,8 +1,8 @@
 <?php
-session_start();
-var_dump($_SESSION);
+require_once "../../App/functions.php";
 require_once "../../App/Database.php";
 
+var_dump($_SESSION);
 
 \App\Database::isLoggedIn();
 $userName = $_SESSION["username"];

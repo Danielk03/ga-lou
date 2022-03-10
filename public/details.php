@@ -1,7 +1,5 @@
 <?php
 require_once "../App/functions.php";
-require_once "../vendor/autoload.php";
-
 
 var_dump($_GET);
 $productId = $_GET["productId"] ?? "Namn saknas";

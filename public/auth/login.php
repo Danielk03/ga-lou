@@ -1,7 +1,8 @@
 <?php
-session_start();
-var_dump($_POST);
+require_once "../../App/functions.php";
 require_once "../../App/Database.php";
+
+var_dump($_POST);
 
 \App\Database::auth();
 
@@ -17,8 +18,8 @@ require_once "../../App/Database.php";
 </head>
 <body>
 <form action="" method="post">
-    <p><input type="text" name="username" id="username" placeholder="username" value="emil"></p>
-    <p><input type="text" name="password" id="password" placeholder="password" value="EmiBin123"></p>
+    <p><label for="username"></label><input type="text" name="username" id="username" placeholder="username" value="emil"></p>
+    <p><label for="password"></label><input type="text" name="password" id="password" placeholder="password" value="EmiBin123"></p>
     <p><input type="submit" name="action" value="login"></p>
 </form>
 <a href="register.php">Lägg till Användaren</a>

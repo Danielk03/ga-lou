@@ -1,10 +1,13 @@
 <?php
-session_start();
-var_dump($_SESSION);
+require_once "../../App/functions.php";
 require_once "../../App/Database.php";
 
+var_dump($_SESSION);
+
 \App\Database::register();
+
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
