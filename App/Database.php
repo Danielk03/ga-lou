@@ -136,7 +136,7 @@ class Database
         $stmt = Database::getInstance()->getPDO()->prepare($query);
         $stmt->execute([$newUserName, $newPassword]);
         $user = $stmt->fetch();
-        //lyckad inloggning
+//
 //            if ($username == 'emil' && $password == 'EmiBin123') {
 //                $_SESSION['username'] = $username;
 //                header("Location: index.php");
@@ -145,6 +145,7 @@ class Database
 //            header("Location: index.php");
             SimpleRouter::response()->redirect("/auth/");
         } else {
+            var_dump($user);
             echo "Något gick fel";
         }
         return false;

@@ -1,7 +1,7 @@
 <?php
 require_once "../../App/functions.php";
 require_once "../../App/Database.php";
-
+session_start();
 var_dump($_SESSION);
 
 \App\Database::register();
