@@ -1,5 +1,7 @@
 <?php
+
 namespace App;
+
 use App\controllers\authController;
 use \PDO;
 use Pecee\SimpleRouter\SimpleRouter;
@@ -19,7 +21,7 @@ class Database
 
         $dsn = "mysql:host=$host;port=3306;dbname=$db";
 //        $this->pdo = new PDO($dsn, $user, $password);
-        $this->pdo = new PDO($dsn, $user, $password,[PDO::ATTR_PERSISTENT => true]);
+        $this->pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
         $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
@@ -57,9 +59,10 @@ class Database
             'username' => FILTER_SANITIZE_STRING,
             'password' => FILTER_SANITIZE_STRING,
         ];
-        $validatedInput = filter_input_array(INPUT_POST, $rules);
         $newUserName = $validatedInput['username'] ?? null;
         $newPassword = $validatedInput['password'] ?? null;
+
+        $validatedInput = filter_input_array(INPUT_POST, $rules);
 
         $errors = [];
 
@@ -79,23 +82,68 @@ class Database
             redirect($_SERVER["HTTP_REFERER"]);
             exit();
         }
+        var_dump($_SESSION);
         $stmt = Database::getInstance()->getPDO()->prepare($query);
         $stmt->execute([$newUserName, $newPassword]);
         $user = $stmt->fetch();
-//            if ($newUserName == 'emil' && $newPassword == 'EmiBin123') {
-//                $_SESSION['username'] = $newUserName;
-////                header("Location: index.php");
-//                SimpleRouter::response()->redirect("/auth/");
 
-                if ($user) {
+        if ($user) {
             $_SESSION["username"] = $user->username;
 //            header("Location: index.php");
             SimpleRouter::response()->redirect("/authe");
         } else {
             echo "Något gick fel";
         }
-
         return false;
+    }
+
+    public static function update()
+    {
+        $username = $_SESSION['username'];
+        var_dump($_POST);
+        $oldUsername=$_POST['username'];
+        $oldPassword = $_POST['password'];
+
+        $rules = array(
+            'username'=>  FILTER_SANITIZE_STRING,
+            'password'   => FILTER_SANITIZE_STRING
+        );
+
+        $oldUsername = $validatedInput['username'] ?? null;
+        $oldPassword = $validatedInput['password'] ?? null;
+
+        $validateInput = filter_input_array(INPUT_POST, $rules);
+
+        $errors = [];
+        if($validateInput["username"]){
+            $validatedUsername = $validateInput["username"];
+        } else {
+            $errors[] = 'Det blev ett username fel.';
+        }
+        if($validateInput["password"]){
+            $validatedPassword = $validateInput["password"];
+        } else {
+            $errors[] = 'Det blev ett password fel.';
+        }
+
+
+        var_dump($_SESSION);
+        if(count($errors)){
+            $_SESSION["errors"] = $errors;
+            $_SESSION["fields"] = $_POST;
+            echo  "fel!!";
+            exit();
+        }
+        $updateUser = <<<EOD
+            UPDATE users
+            SET  password =?
+            WHERE  username = '$username'; 
+        EOD;
+
+        $stmt = db()->prepare($updateUser);
+        $stmt->execute([$validatedPassword]);
+        SimpleRouter::response()->redirect("/authe/");
+
     }
 
     public static function register()
@@ -106,7 +154,15 @@ class Database
 //        self::validateUser();
         $newUserName = $_POST["username"] ?? null;
         $newPassword = $_POST["password"] ?? null;
-        $query = "select username from users where username = ? and password = ?;";
+
+        var_dump($newUserName);
+        var_dump($newPassword);
+        $query = "select username 
+                from users 
+                where username = ? 
+                and password = ?;
+                 ";
+
         $rules = [
             'username' => FILTER_SANITIZE_STRING,
             'password' => FILTER_SANITIZE_STRING,
@@ -115,17 +171,20 @@ class Database
         $newUserName = $validatedInput['username'] ?? null;
         $newPassword = $validatedInput['password'] ?? null;
 
+        var_dump($newUserName);
+        var_dump($newPassword);
+
         $errors = [];
 
         if ($validatedInput['username']) {
             $newUserName = $validatedInput['username'];
         } else {
-            $errors[] = 'Felaktigt username';
+            $errors[] = 'Felaktigt användarnamn';
         }
         if ($validatedInput['password']) {
             $newPassword = $validatedInput['password'];
         } else {
-            $errors[] = 'Felaktig beskrivning';
+            $errors[] = 'Felaktigt lösenord';
         }
         if (count($errors)) {
             $_SESSION["errors"] = $errors;
@@ -133,69 +192,28 @@ class Database
             redirect($_SERVER["HTTP_REFERER"]);
             exit();
         }
+
+        $insertUser =  <<< EOD
+        insert into users(username, password)
+        VALUES (?,?);
+        EOD;
+
+        $stmt = db()->prepare($insertUser);
+        $stmt->execute([$newUserName,$newPassword]);
+        $userINFO = $stmt->fetch(PDO::FETCH_OBJ);
+        var_dump($userINFO);
+
+
         $stmt = Database::getInstance()->getPDO()->prepare($query);
-        $stmt->execute([$newUserName, $newPassword]);
-        $user = $stmt->fetch();
-//
-//            if ($username == 'emil' && $password == 'EmiBin123') {
-//                $_SESSION['username'] = $username;
-//                header("Location: index.php");
-        if ($user) {
-            $_SESSION["username"] = $user->username;
-//            header("Location: index.php");
-            SimpleRouter::response()->redirect("/auth/");
+        var_dump($query);
+        $success = $stmt->execute([$newUserName, $newPassword]);
+        var_dump($success);
+        if ($success) {
+            $_SESSION["username"] = $newUserName;
+//            SimpleRouter::response()->redirect("/authe/");
         } else {
-            var_dump($user);
             echo "Något gick fel";
         }
         return false;
     }
-
-
-//    public static function validateUser()
-//    {
-//        $newUserName = $_POST["username"] ?? null;
-////        $newPassword = $_POST["password"] ?? null;
-////        $query = "select username from users where username = ? and password = ?;";
-////        $rules = [
-////            'username' => FILTER_SANITIZE_STRING,
-////            'password' => FILTER_SANITIZE_STRING,
-////        ];
-////        $validatedInput = filter_input_array(INPUT_POST, $rules);
-////        $newUserName = $validatedInput['username'] ?? null;
-////        $newPassword = $validatedInput['password'] ?? null;
-////
-////        $errors = [];
-////
-////        if ($validatedInput['username']) {
-////            $newUserName = $validatedInput['username'];
-////        } else {
-////            $errors[] = 'Felaktigt username';
-////        }
-////        if ($validatedInput['password']) {
-////            $newPassword = $validatedInput['password'];
-////        } else {
-////            $errors[] = 'Felaktig beskrivning';
-////        }
-////        if (count($errors)) {
-////            $_SESSION["errors"] = $errors;
-////            $_SESSION["fields"] = $_POST;
-////            redirect($_SERVER["HTTP_REFERER"]);
-////            exit();
-////        }
-////        $stmt = Database::getInstance()->getPDO()->prepare($query);
-////        $stmt->execute([$newUserName, $newPassword]);
-////        $user = $stmt->fetch();
-////        //lyckad inloggning
-//////            if ($username == 'emil' && $password == 'EmiBin123') {
-//////                $_SESSION['username'] = $username;
-//////                header("Location: index.php");
-////        if ($user) {
-////            $_SESSION["username"] = $user->username;
-//////            header("Location: index.php");
-////            SimpleRouter::response()->redirect("/auth/");
-////        } else {
-////            echo "Något gick fel";
-////        }
-////    }
 }

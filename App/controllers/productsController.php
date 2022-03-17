@@ -1,6 +1,7 @@
 <?php
 
 namespace App\controllers;
+
 use App\Database;
 use PDO;
 use Pecee\SimpleRouter\SimpleRouter;
@@ -9,8 +10,51 @@ class productsController
 {
     public function productIndex()
     {
-        \App\Database::auth();
+        \App\Database::isLoggedIn();
+        $userName = $_SESSION["username"];
+        echo "Hej $userName";
+        echo '<ol><a href="/authe/"> Auth // Logga in <a/></ol> <br>';
+        echo '<ol><a href="/products/user"> Till dina produkter<a/></ol> <br>';
 
+        $productType = <<<EOD
+        select *
+        from productTypes;
+        EOD;
+
+        $stmt = db()->prepare($productType);
+        $stmt->execute();
+        $productTypes = $stmt->fetchAll();
+//        var_dump($productTypes);
+
+        $userInfo = <<<EOD
+        select * from users;
+        EOD;
+
+        $stmt = db()->prepare($userInfo);
+        $stmt->execute();
+        $userInfo = $stmt->fetchAll(PDO::FETCH_OBJ);
+//        var_dump($userInfo);
+
+        $products = <<<EOD
+        select * from products;
+        EOD;
+
+        $stmt = db()->prepare($products);
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        echo "<h3>Produkter</h3>";
+        foreach ($products as $product) {
+            echo '<h4>' . $product->productTitle . '</h4>';
+            echo '<ol><a href="/products/details/' . $product->productId . '"> läs mer om ' . $product->productTitle, '<a/></ol> ';
+            echo '<h5> Säljare : ' . $product->username . '</h5> <br>';
+        }
+
+    }
+
+    public function userProduct()
+    {
+        \App\Database::isLoggedIn();
         $userName = $_SESSION["username"];
         echo "Hej $userName";
         echo '<ol><a href="/authe/"> Auth // Logga in <a/></ol> <br>';
@@ -49,18 +93,19 @@ class productsController
 
         echo "<h3> Dina produkter</h3>";
         foreach ($products as $product) {
-            echo '<h4>'. $product->productTitle .'</h4>';
-            echo '<ol><a href="/products/details/'. $product->productId. '"> läs mer om '. $product->productTitle, '<a/></ol> ';
-            echo '<ol><a href="/products/delete/'. $product->productId. '"> Tabort <a/></ol> <br>';
+            echo '<h4>' . $product->productTitle . '</h4>';
+            echo '<ol><a href="/products/details/' . $product->productId . '"> Redigera  ' . $product->productTitle, '<a/></ol> ';
+            echo '<ol><a href="/products/delete/' . $product->productId . '"> Tabort <a/></ol> <br>';
         }
+
     }
 
     public function delete(string $ProductId)
     {
 
-        $productId = filter_input(INPUT_GET,'url',FILTER_SANITIZE_STRING);
+        $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
         $product = ltrim($productId, "/products/delete/");
-        if (!$product || !$productId){
+        if (!$product || !$productId) {
 //            redirectHome();
             echo "inget p ID";
         }
@@ -77,53 +122,55 @@ class productsController
 
     public function details()
     {
-        $productId = filter_input(INPUT_GET,'url',FILTER_SANITIZE_STRING);
+        $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
 //        var_dump($productId);
         $product = ltrim($productId, "/products/details/");
 //        var_dump($product);
-        if (!$product || !$productId){
+        if (!$product || !$productId) {
 //            redirectHome();
             echo "inget p ID";
         }
-    $productTitle = <<<EOD
-    SELECT productId, productTitle
+        $productTitle = <<<EOD
+    SELECT *
     from products 
     where productId = ?
     EOD;
 
-    $stmt = db()->prepare($productTitle);
-    $stmt->execute([$product]);
-    $products = $stmt->fetch(PDO::FETCH_OBJ);
+        $stmt = db()->prepare($productTitle);
+        $stmt->execute([$product]);
+        $products = $stmt->fetch(PDO::FETCH_OBJ);
 
-    ?>
+        ?>
 
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Document</title>
-           </head>
-    <?php
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport"
+                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Document</title>
+        </head>
+        <?php
+        echo "<h1> $products->productTitle</h1>";
+        echo "<p> $products->productDescription<p>";
+        if ($_SESSION['username'] == $products->username) {
+            echo '<h3><a href="/products/edit/' . $products->productId . '"> redigera produkten <a/></h3> ';
+        } else {
+            echo " Kontakta . $products->username";
+        }
+        ?>
 
-//    echo "<ol><a href='/edit/'. $products->productId .'"> Edit  <a/></ol> <br>';
-//   echo '<a href="/edit/" . echo $products->productId </a>';
-    echo '<ol><a href="/products/edit/'. $products->productId. '"> redigera produkten <a/></ol> ';
-
-    ?>
-
-    <body></body>
-    </html>
-    <?php
+        <body></body>
+        </html>
+        <?php
     }
 
     public function editProduct(string $ProductId)
     {
 
-        if (!$ProductId){
-        //    redirectHome();
+        if (!$ProductId) {
+            //    redirectHome();
             echo "inget id";
             exit();
         }
@@ -156,8 +203,8 @@ class productsController
 
         <body>
         <?php
-        if ($errors){
-            foreach ($errors as $errorMSG){
+        if ($errors) {
+            foreach ($errors as $errorMSG) {
                 echo "<p> $errorMSG </p>";
             }
         }
@@ -167,12 +214,13 @@ class productsController
                 <input type="text" name="productTitle" value="<?php echo $productValues->productTitle ?> ">
             </label>
             <label>
-                <input type="text" name="productDescription" value="<?php echo $productValues->productDescription;?>"
+                <input type="text" name="productDescription" value="<?php echo $productValues->productDescription; ?>"
             </label>
             <label>
                 <select name="productTypeId" id="">
                     <?php foreach ($productTypes as $productType) {
-                        echo '<option value=' . $productType->productTypeId . '>'. $productType->productTypeName .' </option > ';}
+                        echo '<option value=' . $productType->productTypeId . '>' . $productType->productTypeName . ' </option > ';
+                    }
                     ?>
                 </select>
             </label>
@@ -181,25 +229,30 @@ class productsController
         </body>
         </html>
         <?php
-        echo  'id ' . $ProductId ;
+        echo 'id ' . $ProductId;
     }
 
     public function storeProduct()
     {
+        $productId = random_int(0, 100000);
         $productTitle = $_POST["productTitle"] ?? "Namn saknas";
         $productDescription = $_POST["productDescription"] ?? "Beskrivning saknas";
         $productTypeId = $_POST["productTypeId"] ?? "Fel id";
-        $productId = random_int(0, 100000);
         $userName = $_SESSION['username'];
 
+        var_dump($productId);
+        var_dump($productTitle);
+        var_dump($productDescription);
+        var_dump($productTypeId);
+        var_dump($userName);
 
         $sql = <<<EOD
-        insert into products (productTitle, productDescription, productTypeId, productId, username) 
+        insert into products (productId, productTitle, productDescription, productTypeId, username) 
         VALUES(?,?,?,?,?) 
         EOD;
 
         $stmt = db()->prepare($sql);
-        $stmt->execute([$productTitle, $productDescription, $productTypeId, $productId, $userName]);
+        $stmt->execute([$productId, $productTitle, $productDescription, $productTypeId, $userName]);
 
         SimpleRouter::response()->redirect("/products");
 
@@ -213,39 +266,39 @@ class productsController
         $password = "rödbrunrånarluva";
 
         $dsn = "mysql:host=$host;port=3306;dbname=$db";
-        $pdo = new PDO($dsn, $user, $password,[PDO::ATTR_PERSISTENT => true]);
+        $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $conn = mysqli_connect($host, $user, $password,$db);
+        $conn = mysqli_connect($host, $user, $password, $db);
 
 
         include("../config.php");
         $username = $_SESSION["username"];
         echo $username;
-        if(isset($_POST['but_upload'])){
+        if (isset($_POST['but_upload'])) {
 
             $name = $_FILES['file']['name'];
             $target_dir = "upload/";
             $target_file = $target_dir . basename($_FILES["file"]["name"]);
 
             // Select file type
-            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
             // Valid file extensions
-            $extensions_arr = array("jpg","jpeg","png","gif");
+            $extensions_arr = array("jpg", "jpeg", "png", "gif");
 
             // Check extension
-            if( in_array($imageFileType,$extensions_arr) ){
+            if (in_array($imageFileType, $extensions_arr)) {
                 // Upload file
-                if(move_uploaded_file($_FILES['file']['tmp_name'],$target_dir.$name)){
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name)) {
                     // Convert to base64
-                    $image_base64 = base64_encode(file_get_contents('upload/'.$name) );
-                    $image = 'data:image/'.$imageFileType.';base64,'.$image_base64;
+                    $image_base64 = base64_encode(file_get_contents('upload/' . $name));
+                    $image = 'data:image/' . $imageFileType . ';base64,' . $image_base64;
                     // Insert record
                     $query = "insert into images(image,username) values('$image','$username')";
                     //$query = "insert into images(image, username) values('.$image.','.$username.')";
-                    mysqli_query($conn,$query);
+                    mysqli_query($conn, $query);
                 }
             }
         }
@@ -253,7 +306,7 @@ class productsController
 
         <body>
         <form method="post" action="" enctype='multipart/form-data'>
-            <input type='file' name='file' />
+            <input type='file' name='file'/>
             <input type='text' name='name'>
             <input type='submit' value='Save name' name='but_upload'>
         </form>
@@ -261,7 +314,7 @@ class productsController
         <?php
 
         $sql = "select image from images order by id desc limit 1";
-        $result = mysqli_query($conn,$sql);
+        $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($result);
 
         $image_src = $row['image'];
@@ -272,43 +325,43 @@ class productsController
         <img src='<?php echo $image_src; ?>'
         </body>
         </html>
-<?php
+        <?php
     }
 
     public function update(string $ProductId)
     {
-        if (!$ProductId || !filter_var($ProductId, FILTER_VALIDATE_INT)){
+        if (!$ProductId || !filter_var($ProductId, FILTER_VALIDATE_INT)) {
             redirectHome();
         }
 
         $username = $_SESSION['username'];
 
         $rules = array(
-            'productId'   => [
+            'productId' => [
                 'filter' => FILTER_VALIDATE_INT
             ],
-            'productTitle'   => FILTER_SANITIZE_STRING,
-            'productDescription'   => FILTER_SANITIZE_STRING,
-            'productTypeId'   => [
+            'productTitle' => FILTER_SANITIZE_STRING,
+            'productDescription' => FILTER_SANITIZE_STRING,
+            'productTypeId' => [
                 'filter' => FILTER_VALIDATE_INT,
-                'options' => ['min_range'=>0, 'max_range'=>3]
+                'options' => ['min_range' => 0, 'max_range' => 3]
 
             ]
         );
         $validateInput = filter_input_array(INPUT_POST, $rules);
 
         $errors = [];
-        if($validateInput["productTitle"]){
+        if ($validateInput["productTitle"]) {
             $title = $validateInput["productTitle"];
         } else {
             $errors[] = 'Det blev ett internt fel.';
         }
-        if($validateInput["productDescription"]){
+        if ($validateInput["productDescription"]) {
             $description = $validateInput["productDescription"];
         } else {
             $errors[] = 'Det blev ett internt fel.';
         }
-        if($validateInput["productTypeId"]){
+        if ($validateInput["productTypeId"]) {
             $typeId = $validateInput["productTypeId"];
         } else {
             $errors[] = 'Det blev ett internt fel.';
@@ -319,10 +372,10 @@ class productsController
 //        var_dump($description);
 //        var_dump($username);
 
-        if(count($errors)){
+        if (count($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["fields"] = $_POST;
-            echo  "fel!!";
+            echo "fel!!";
             exit();
         }
 
@@ -336,7 +389,7 @@ class productsController
             EOD;
 
         $stmt = db()->prepare($updateProduct);
-        $stmt->execute([$title, $description, $typeId, $username , $ProductId]);
+        $stmt->execute([$title, $description, $typeId, $username, $ProductId]);
         SimpleRouter::response()->redirect('/products/');
 
     }
@@ -366,15 +419,15 @@ class productsController
         <body>
         <form action="/products/store" method="post">
             <label for=""></label><select name="productTypeId" id="">
-                <?php foreach ($productTypes as $productType){
-                    echo '<option value="'. $productType->productTypeId.'">'. $productType->productTypeName.'</option>';
-                }?>
+                <?php foreach ($productTypes as $productType) {
+                    echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
+                } ?>
             </select>
             <label>
                 <input type="text" name="productTitle" placeholder="Skriv din artikels titel">
             </label>
             <label>
-                <input type="text" name="productDescription" placeholder="Skriv artikelns beskrivning här " >
+                <input type="text" name="productDescription" placeholder="Skriv artikelns beskrivning här ">
                 <input type="submit">
             </label>
         </form>

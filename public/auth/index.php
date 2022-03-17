@@ -1,4 +1,5 @@
 <?php
+
 require_once "../../App/functions.php";
 require_once "../../App/Database.php";
 

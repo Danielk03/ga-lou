@@ -8,14 +8,21 @@ class authController
 {
     public function authIndex ()
     {
-        \App\Database::isLoggedIn();
-        $userName = $_SESSION["username"]?? null;
-        var_dump($userName);
+//        \App\Database::auth();
         // ger inputen / $_GET från url
-        echo input('fisk');
+//        echo input('fisk');
+        $userName = $_SESSION["username"]?? null;
         echo "<h1>Välkommen $userName</h1>";
-        echo "<a href='/products/'> Till produkterna </a>";
-        echo "<a href='/authe/logout/'>Logga ut</a>";
+        if (!isset($_SESSION["username"]) || $_SESSION["username"] == null){
+            echo "Du är inte inloggad";
+            echo "<br><a href='/authe/login/'>Logga in</a><br>";
+            echo "<br><a href='/authe/register/'>Registrera Dig!</a><br><br>";
+        }
+        echo "<a href='/products/'> Till produkterna </a><br>";
+        if ($userName){
+            echo "<a href='/authe/edit/'> Byt lösenord </a><br>";
+            echo "<a href='/authe/logout/'>Logga ut</a>";
+        }
     }
 
     public function login()
@@ -83,7 +90,30 @@ class authController
     public function editUser()
     {
 
-    \App\Database::register();
+    \App\Database::auth();
+
+
+        if(empty($_SESSION['username']) || $_SESSION['username']== null){
+
+            echo "Du måste logga in <br>";
+            echo '<a href="/authe/login"> Klicka här för att Logga in <a/></ol> <br>';
+            exit();
+        }
+
+        var_dump($_SESSION);
+        $username=$_SESSION['username'];
+
+        $userInfo = <<<EOD
+        select *
+        from users
+        where username = '$username';
+        EOD;
+
+        $stmt = db()->prepare($userInfo);
+        $stmt->execute();
+        $userInfo = $stmt->fetch();
+        var_dump($userInfo);
+
 
     ?>
 
@@ -97,10 +127,10 @@ class authController
         <title>Document</title>
     </head>
     <body>
-    <form action=" " method="post">
-        <p><input type="text" name="username" id="username" placeholder="username" value=""></p>
-        <p><input type="password" name="password" id="password" placeholder="password" value=""></p>
-        <p><input type="submit" name="action" value="Registera"></p>
+    <form action="/authe/update/" method="post">
+        <p><input type="text" name="username" id="username" value=" <?php echo $userInfo->username ?>"></p>
+        <p><input type="text" name="password" id="password" value=" <?php echo $userInfo->password?>"</p>
+        <p><input type="submit" name="action" value="Spara ändringar"></p>
 
     </form>
     </body>
@@ -108,4 +138,10 @@ class authController
     <?php
     }
 
+    public function update()
+    {
+        \App\Database::update();
+        echo $_SESSION['username'];
+
+    }
 }
