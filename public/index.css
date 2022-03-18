@@ -1,0 +1,71 @@
+@media screen and (min-width: 900px) {
+    .containerborder {
+        margin: 0 auto;
+        max-width: 900px;
+    }
+}
+
+
+
+.container-xl {
+    margin-left: auto;
+    width: 5vw;
+}
+
+.container-fluid {
+    margin-left: 0;
+    width: 50vw;
+    height: 10px;
+    alignment: left;
+    padding-left: 0;
+}
+
+.container-nav {
+    width: 52%;
+    height: 100%;
+    top: 0;
+    background-color: #54595E;
+    position: absolute;
+    left: 0;
+}
+
+.nav-font {
+    font-weight: bold;
+    font-size: large;
+    alignment: center;
+    color: white;
+    position: relative;
+    text-align: center;
+    margin-bottom: 15%;
+}
+
+.text-time {
+    font-size: 2px;
+    alignment: right;
+    margin-right: 0;
+    background-color: grey;
+    height: 40px;
+}
+
+.nav-icon-placement {
+    top: 30px;
+    left: 30px;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.profile-icon-placement {
+    position: fixed;
+    right: 30px;
+    height: 50px;
+    width: 50px;
+    top: 30px;
+}
+
+.nav-icon-close {
+    top: 30px;
+    left: 20px;
+    color: white;
+    position: relative;
+    margin-bottom: 50px;
+}

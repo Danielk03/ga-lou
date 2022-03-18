@@ -271,50 +271,59 @@ class productsController
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $conn = mysqli_connect($host, $user, $password, $db);
-
-
         include("../config.php");
         $username = $_SESSION["username"];
         echo $username;
-        if (isset($_POST['but_upload'])) {
+        if(isset($_POST['but_upload'])){
 
             $name = $_FILES['file']['name'];
             $target_dir = "upload/";
             $target_file = $target_dir . basename($_FILES["file"]["name"]);
 
             // Select file type
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
             // Valid file extensions
-            $extensions_arr = array("jpg", "jpeg", "png", "gif");
+            $extensions_arr = array("jpg","jpeg","png","gif");
 
             // Check extension
-            if (in_array($imageFileType, $extensions_arr)) {
+            if( in_array($imageFileType,$extensions_arr) ){
                 // Upload file
-                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name)) {
+                if(move_uploaded_file($_FILES['file']['tmp_name'],$target_dir.$name)){
                     // Convert to base64
-                    $image_base64 = base64_encode(file_get_contents('upload/' . $name));
-                    $image = 'data:image/' . $imageFileType . ';base64,' . $image_base64;
+                    $image_base64 = base64_encode(file_get_contents('upload/'.$name) );
+                    $image = 'data:image/'.$imageFileType.';base64,'.$image_base64;
                     // Insert record
                     $query = "insert into images(image,username) values('$image','$username')";
                     //$query = "insert into images(image, username) values('.$image.','.$username.')";
-                    mysqli_query($conn, $query);
+                    mysqli_query($conn,$query);
                 }
+
             }
+
         }
         ?>
-
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport"
+                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Document</title>
+        </head>
         <body>
-        <form method="post" action="" enctype='multipart/form-data'>
-            <input type='file' name='file'/>
+        <form method="post" action="/products/image" enctype='multipart/form-data'>
+            <input type='file' name='file' />
             <input type='text' name='name'>
             <input type='submit' value='Save name' name='but_upload'>
         </form>
         </body>
+        </html>
         <?php
 
         $sql = "select image from images order by id desc limit 1";
-        $result = mysqli_query($conn, $sql);
+        $result = mysqli_query($conn,$sql);
         $row = mysqli_fetch_array($result);
 
         $image_src = $row['image'];
