@@ -1,7 +1,49 @@
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 800px) {
     .containerborder {
         margin: 0 auto;
-        max-width: 900px;
+        max-width: 800px;
+    }
+    .container-nav {
+        top: 0;
+        position: absolute;
+        width: 416px;
+        height: 100%;
+        background-color: #54595E;
+    }
+    .profile-icon-placement {
+        top: 30px;
+        position: relative;
+        height: 50px;
+        width: 50px;
+        left: 720px;
+    }
+    .nav-icon-placement {
+        top: 30px;
+        position: absolute;
+        margin-bottom: 100px;
+    }
+}
+@media screen and (max-width: 800px ) and (min-width: 240px) {
+    .container-nav {
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 52%;
+        height: 100%;
+        background-color: green;
+    }
+    .profile-icon-placement {
+        top: 30px;
+        right: 30px;
+        position: absolute;
+        height: 50px;
+        width: 50px;
+    }
+    .nav-icon-placement {
+        top: 30px;
+        left: 30px;
+        position: relative;
+        margin-bottom: 40px;
     }
 }
 
@@ -20,15 +62,6 @@
     padding-left: 0;
 }
 
-.container-nav {
-    width: 52%;
-    height: 100%;
-    top: 0;
-    background-color: #54595E;
-    position: absolute;
-    left: 0;
-}
-
 .nav-font {
     font-weight: bold;
     font-size: large;
@@ -45,21 +78,6 @@
     margin-right: 0;
     background-color: grey;
     height: 40px;
-}
-
-.nav-icon-placement {
-    top: 30px;
-    left: 30px;
-    position: relative;
-    margin-bottom: 40px;
-}
-
-.profile-icon-placement {
-    position: fixed;
-    right: 30px;
-    height: 50px;
-    width: 50px;
-    top: 30px;
 }
 
 .nav-icon-close {
