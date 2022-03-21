@@ -33,7 +33,7 @@ class indexController
                 <div class="container container-nav" id="container">
                     <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation"> CLOSE</button>
                     <br>
-                    <p class="nav-font">Hitta produkter</p>
+                    <p class="nav-font"><a href="/products/">produkter</a></p>
                     <p class="nav-font">Dina produkter</p>
                     <p></p>
                 </div>

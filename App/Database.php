@@ -154,9 +154,14 @@ class Database
 //        self::validateUser();
         $newUserName = $_POST["username"] ?? null;
         $newPassword = $_POST["password"] ?? null;
+        $newMail = $_POST["userMail"] ?? null;
+        $newPhoneNumber = $_POST["userPhoneNumber"] ?? null;
 
         var_dump($newUserName);
         var_dump($newPassword);
+        var_dump($newPhoneNumber);
+        var_dump($newMail);
+
         $query = "select username 
                 from users 
                 where username = ? 
@@ -166,13 +171,19 @@ class Database
         $rules = [
             'username' => FILTER_SANITIZE_STRING,
             'password' => FILTER_SANITIZE_STRING,
+            'userPhoneNumber' => FILTER_VALIDATE_INT,
+            'userMail' => FILTER_SANITIZE_STRING,
         ];
         $validatedInput = filter_input_array(INPUT_POST, $rules);
         $newUserName = $validatedInput['username'] ?? null;
         $newPassword = $validatedInput['password'] ?? null;
+        $newPhoneNumber = $validatedInput['userPhoneNumber'] ?? null;
+        $newMail = $validatedInput['userMail'] ?? null;
 
         var_dump($newUserName);
         var_dump($newPassword);
+        var_dump($newPhoneNumber);
+        var_dump($newMail);
 
         $errors = [];
 
@@ -186,6 +197,18 @@ class Database
         } else {
             $errors[] = 'Felaktigt lösenord';
         }
+        if ($validatedInput['userPhoneNumber']) {
+            $newPhoneNumber = $validatedInput['userPhoneNumber'];
+        } else {
+            $errors[] = 'Felaktigt tele num';
+        }
+        if ($validatedInput['userMail']) {
+            $newMail = $validatedInput['userMail'];
+        } else {
+            $errors[] = 'Felaktigt mail';
+        }
+
+
         if (count($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["fields"] = $_POST;
@@ -194,12 +217,12 @@ class Database
         }
 
         $insertUser =  <<< EOD
-        insert into users(username, password)
-        VALUES (?,?);
+        insert into users(username, password,userMail,userTeleNumber)
+        VALUES (?,?,?,?);
         EOD;
 
         $stmt = db()->prepare($insertUser);
-        $stmt->execute([$newUserName,$newPassword]);
+        $stmt->execute([$newUserName,$newPassword,$newMail,$newPhoneNumber]);
         $userINFO = $stmt->fetch(PDO::FETCH_OBJ);
         var_dump($userINFO);
 
@@ -210,7 +233,7 @@ class Database
         var_dump($success);
         if ($success) {
             $_SESSION["username"] = $newUserName;
-//            SimpleRouter::response()->redirect("/authe/");
+            SimpleRouter::response()->redirect("/authe/");
         } else {
             echo "Något gick fel";
         }

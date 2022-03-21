@@ -79,6 +79,8 @@ class authController
     <form action="" method="post">
         <p><input type="text" name="username" id="username" placeholder="username" value=""></p>
         <p><input type="password" name="password" id="password" placeholder="password" value=""></p>
+        <p><input type="text" name="userMail" id="userMail" placeholder="mail" value=""></p>
+        <p><input type="number" name="userPhoneNumber" id="userPhoneNumber" placeholder="phone number" value=""></p>
         <p><input type="submit" name="action" value="Registera"></p>
 
     </form>
