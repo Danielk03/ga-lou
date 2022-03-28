@@ -15,7 +15,7 @@ function db():PDO
     $user = "ga-lou";
     $password = "rödbrunrånarluva";
 
-    $dsn = "mysql:host=$host;port=3306;dbname=$db";
+    $dsn = "mysql:host=$host;port=3306;dbname=$db;charset=UTF8";
     $pdo = new PDO($dsn, $user, $password,[PDO::ATTR_PERSISTENT => true]);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
