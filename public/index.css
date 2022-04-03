@@ -22,6 +22,7 @@
         position: absolute;
         margin-bottom: 100px;
     }
+
 }
 @media screen and (max-width: 800px ) and (min-width: 240px) {
     .container-nav {
@@ -46,7 +47,6 @@
         margin-bottom: 40px;
     }
 }
-
 
 
 .container-xl {
@@ -86,4 +86,49 @@
     color: white;
     position: relative;
     margin-bottom: 50px;
+}
+
+.center {
+    text-align: center;
+}
+
+.mb-4 {
+    margin: auto;
+    width: 50%;
+}
+
+
+.m-top {
+    padding-top: 150px;
+}
+
+a{
+ color: black;
+}
+h1{
+    padding-top: 22px;
+}
+#container{
+    text-align: center;
+}
+
+
+.btn-login {
+    background-color: #2152B0;
+    height: 40px;
+    color: white;
+}
+.btn-cancell {
+    /*background-color: ;*/
+    margin: 22px;
+    border-color: black;
+    width: 85px;
+    height: 40px;
+    color: black;
+
+
+}
+.btn-login:hover {
+    background-color: #05348D;
+    color: white;
 }

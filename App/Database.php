@@ -54,6 +54,8 @@ class Database
 //        self::validateUser();
         $newUserName = $_POST["username"] ?? null;
         $newPassword = $_POST["password"] ?? null;
+
+
         $query = "select username from users where username = ? and password = ?;";
         $rules = [
             'username' => FILTER_SANITIZE_STRING,
@@ -76,13 +78,13 @@ class Database
         } else {
             $errors[] = 'Felaktig beskrivning';
         }
+
         if (count($errors)) {
             $_SESSION["errors"] = $errors;
             $_SESSION["fields"] = $_POST;
             redirect($_SERVER["HTTP_REFERER"]);
             exit();
         }
-        var_dump($_SESSION);
         $stmt = Database::getInstance()->getPDO()->prepare($query);
         $stmt->execute([$newUserName, $newPassword]);
         $user = $stmt->fetch();
