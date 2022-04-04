@@ -23,8 +23,7 @@ class authController
         </head>
         <body>
         <div class="containerborder">
-
-            <?php
+            <?php profilIcon();
             if (!isset($_SESSION["username"]) || $_SESSION["username"] == null) {
                 echo "<div class='center m-top'><h1> Du är inte inloggad</h1></div>";
                 echo "<br> <div class='center'> <form action='/authe/login'> 
@@ -35,25 +34,38 @@ class authController
                        <input class='btn btn-login' type='submit' value='Registrera dig'>
                        </form>
                        </div>";
-            }
-            echo "<div class='center m-top'><a href='/products/'</div> Till produkterna </a><br>";
-            if ($userName) {
-                echo "<div class='center mb-4'><h1>Välkommen ";
-                echo $userName . '</h1></div>';
-                echo "<br> <div id='container' class='center mb-4'>
-                        <form action='/products/user'> 
-                        <label class='form-label'>
-                       <input class='btn btn-login' type='submit' value='Dina produkter '>
-                       </label>
-                       </form>
-                        <form action='/authe/edit'> 
-                       <input class='btn btn-login' type='submit' value='Redigera Profil '>
-                       </form>
-                       </div>";
-                echo "<div class='m-top'><a href='/authe/logout/'>Logga ut</a><br>";
-                echo "<a href='/authe/delete/'>Radera konto</a></div>";
-            }
-            ?>
+            } ?>
+            <div class='center m-top'>
+                <a href="/products/"> Till produkterna </a><br>
+                <h1>Välkommen <?php echo $userName; ?> </h1>
+            </div><br>
+
+            <div id='container' class='center mb-4'>
+                <form action='/products/upload'>
+                    <label class='form-label'>
+                        <input class='btn btn-login' type='submit' value='Ladda Upp produkt '>
+                    </label>
+                </form>
+            </div>
+
+            <div id='container' class='center mb-4'>
+                <form action='/products/user'>
+                    <label class='form-label'>
+                        <input class='btn btn-login' type='submit' value='Dina produkter '>
+                    </label>
+                </form>
+            </div>
+
+            <div id='container' class='center mb-4'>
+                <form action='/authe/edit'>
+                    <input class='btn btn-login' type='submit' value='Redigera Profil '>
+                </form>
+            </div>
+            <div class='m-top center'><a href='/authe/logout/'>Logga ut</a><br>
+                <a href='/authe/delete/'>Radera konto</a>
+            </div>
+
+
         </div>
         </body>
         </html>
@@ -92,6 +104,7 @@ class authController
             <title>Document</title>
         </head>
         <body>
+        <?php profilIcon(); ?>
         <div class="containerborder">
             <div class="center mb-4 m-top">
                 <a href="/"> Tillbaka</a>
@@ -119,7 +132,6 @@ class authController
         </body>
         </html>
         <?php
-
     }
 
     public function logout()
@@ -143,6 +155,7 @@ class authController
             <title>Document</title>
         </head>
         <body>
+        <?php profilIcon(); ?>
         <div class="containerborder">
             <div class="center mb-4 m-top">
                 <a href="/"> Tillbaka</a>
@@ -218,6 +231,7 @@ class authController
             <title>Document</title>
         </head>
         <body>
+        <?php profilIcon(); ?>
         <div class="containerborder">
             <div class="center mb-4 m-top">
                 <a href="/"> Tillbaka</a>
