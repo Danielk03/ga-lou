@@ -55,7 +55,7 @@ class indexController
         <div class="containerborder">
             <div class="center m-above">
                 <h1> Välkommen till LoU</h1>
-                <p> ****Beskrivning av sidan****</p>
+                <p> Sveriges bästa lån och utlåningssida</p>
             </div>
             <div class="center m-above">
                 <form action="/authe/login">
@@ -70,6 +70,8 @@ class indexController
                 </form>
             </div>
         </div>
+        <?php navbar();?>
+
         </body>
         </html>
       <?php

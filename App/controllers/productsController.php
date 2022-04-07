@@ -167,7 +167,7 @@ class productsController
                 foreach ($products as $product) {
                     echo '
         <div class="col">
-        <a href="/products/details/'.$product->productId .' ">
+        <a href="/products/details/' . $product->productId . ' ">
         <div class="card h-100"  style="width: 100%"> 
             <img src="' . $product->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
             <div class="card-body">
@@ -187,19 +187,7 @@ class productsController
             ?>
         </div>
         </div>
-        <div class="collapse" id="navbarToggleExternalContent">
-            <div class="container-nav" id="container">
-                <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"> CLOSE
-                </button>
-                <br>
-                <p class="nav-font"><a id="a-navbar" href="/products">Hitta produkter</a></p>
-                <p class="nav-font"><a id="a-navbar" href="/products/user">Dina produkter</a></p>
-                <p class="nav-font"><a id="a-navbar" href="/products/upload">Skapa annons</></p>
-                <p></p>
-            </div>
-        </div>
+        <?php navbar(); ?>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                 crossorigin="anonymous"></script>
@@ -320,22 +308,11 @@ class productsController
         ';
 
             ?>
-            <div class="collapse" id="navbarToggleExternalContent">
-                <div class="container-nav" id="container">
-                    <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                            aria-expanded="false" aria-label="Toggle navigation"> CLOSE
-                    </button>
-                    <br>
-                    <p class="nav-font">Hitta produkter</p>
-                    <p class="nav-font">Dina produkter</p>
-                    <p></p>
-                </div>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
+            <?php navbar(); ?>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous"></script>
         </body>
         </html>
         <?php
@@ -452,18 +429,8 @@ class productsController
                 </div>
             </form>
         </div>
-        <div class="collapse" id="navbarToggleExternalContent">
-            <div class="container-nav containerborder" id="containerborder">
-                <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"> CLOSE
-                </button>
-                <br>
-                <p class="nav-font">Hitta produkter</p>
-                <p class="nav-font">Dina produkter</p>
-                <p></p>
-            </div>
-        </div>
+        <?php navbar(); ?>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                 crossorigin="anonymous"></script>
@@ -532,84 +499,6 @@ class productsController
         $sql = "select image from image order by id desc limit 1";
 
         SimpleRouter::response()->redirect("/products");
-    }
-
-    public function uploadImage()
-    {
-        $host = "192.168.250.74";
-        $db = "ga-lou";
-        $user = "ga-lou";
-        $password = "rödbrunrånarluva";
-
-        $dsn = "mysql:host=$host;port=3306;dbname=$db";
-        $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $conn = mysqli_connect($host, $user, $password, $db);
-
-        include("../config.php");
-        $username = $_SESSION["username"];
-        echo $username;
-        if (isset($_POST['but_upload'])) {
-
-            $name = $_FILES['file']['name'];
-            $target_dir = "upload/";
-            $target_file = $target_dir . basename($_FILES["file"]["name"]);
-
-            // Select file type
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-            // Valid file extensions
-            $extensions_arr = array("jpg", "jpeg", "png", "gif");
-
-            // Check extension
-            if (in_array($imageFileType, $extensions_arr)) {
-                // Upload file
-                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name)) {
-                    // Convert to base64
-                    $image_base64 = base64_encode(file_get_contents('upload/' . $name));
-                    $image = 'data:image/' . $imageFileType . ';base64,' . $image_base64;
-                    // Insert record
-                    $query = "insert into image(image,username) values('$image','$username')";
-                    //$query = "insert into images(image, username) values('.$image.','.$username.')";
-                    mysqli_query($conn, $query);
-                }
-
-            }
-
-        }
-        ?>
-        <!doctype html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Document</title>
-        </head>
-        <body>
-        <form method="post" action="/products/image" enctype='multipart/form-data'>
-            <input type='file' name='file'/>
-            <input type='text' name='name'>
-            <input type='submit' value='Använd Bild' name='but_upload'>
-        </form>
-        <?php
-
-        $sql = "select image from image order by id desc limit 1";
-        var_dump($conn, $sql);
-        $result = mysqli_query($conn, $sql);
-        var_dump($result);
-        $row = mysqli_fetch_array($result);
-
-        $image_src = $row['image'];
-
-        ?>
-        <img src='<?php echo $image_src; ?>'
-        </body>
-        </html>
-        <?php
     }
 
     public function update(string $ProductId)
@@ -772,6 +661,8 @@ class productsController
                 </div>
             </form>
         </div>
+        <?php navbar(); ?>
+
         </body>
         </html>
         <?php
@@ -872,20 +763,7 @@ class productsController
             ?>
 
         </div>
-        <div class="collapse" id="navbarToggleExternalContent">
-            <div class="container-nav" id="container">
-                <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"> CLOSE
-                </button>
-                <br>
-                <p class="nav-font"><a href="/products">Hitta produkter</a></p>
-                <p class="nav-font"><a href="/products/user">Dina produkter</a></p>
-                <p class="nav-font"><a href="/products/upload">Skapa annons</a></p>
-                <p></p>
-            </div>
-        </div>
-
+        <?php navbar(); ?>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                 crossorigin="anonymous"></script>

@@ -38,6 +38,23 @@ function profilIcon() {
         </div>
         <?php
 }
+function navbar(){
+    ?>
+    <div class="collapse" id="navbarToggleExternalContent">
+            <div class="container-nav" id="container">
+                <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation"> CLOSE
+                </button>
+                <br>
+                <p class="nav-font"><a id="a-navbar" href="/products">Hitta produkter</a></p>
+                <p class="nav-font"><a id="a-navbar" href="/products/user">Dina produkter</a></p>
+                <p class="nav-font"><a id="a-navbar" href="/products/upload">Skapa annons</></p>
+                <p></p>
+            </div>
+        </div>
+        <?php
+}
 
 function redirectHome():void{
     header('Location:/');

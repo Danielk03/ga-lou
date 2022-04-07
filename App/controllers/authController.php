@@ -67,6 +67,8 @@ class authController
 
 
         </div>
+        <?php navbar();?>
+
         </body>
         </html>
         <?php
@@ -129,6 +131,7 @@ class authController
             </form>
             <a href="/authe/register/">Registrera dig</a>
         </div>
+        <?php navbar();?>
         </body>
         </html>
         <?php
@@ -193,6 +196,8 @@ class authController
                 <input class="btn btn-cancell" type="submit" value="Avbryt">
             </form>
         </div>
+        <?php navbar();?>
+
         </body>
         </html>
         <?php
@@ -257,6 +262,8 @@ class authController
                 <input class="btn btn-cancell" type="submit" name="Avbryt" value="Avbryt">
             </form>
         </div>
+        <?php navbar();?>
+
         </body>
         </html>
         <?php
