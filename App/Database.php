@@ -43,6 +43,7 @@ class Database
     {
         if (!isset($_SESSION["username"]) || $_SESSION["username"] == null) {
             SimpleRouter::response()->redirect("/authe/login");
+            exit();
         }
     }
 

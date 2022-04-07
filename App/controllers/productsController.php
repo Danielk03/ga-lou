@@ -10,6 +10,11 @@ class productsController
 {
     public function productIndex()
     {
+
+        \App\Database::isLoggedIn();
+
+        $userName = $_SESSION["username"];
+
         $products = <<<EOD
         select * from products;
         EOD;
@@ -84,89 +89,103 @@ class productsController
         <body>
         <?php profilIcon() ?>
 
-        <nav class="navbar navbar-light nav-icon-placement">
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-            </nav>
-            <br>
-            <br>
-
-            <form action=" " method="get">
-                <label>
-                    <input placeholder="Ange minsta värde" name="lowPrice" type="number"
-                           value="<?php echo $lowPrice ?>">
-                    <input placeholder="Ange max värde" name="highPrice" type="number" value="<?php echo $highPrice ?>">
-                </label>
-                <label>
-                    <select name="productTypeId" id="productTypeId">
-                        <p> Kategori</p>
-                        <?php
-                        foreach ($productTypes as $productType) {
-                            echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
-                        }
-                        ?>
-                    </select>
-                </label>
-                <input type="submit">
-            </form>
-            <form action="/products/">
-                <input type="submit" value="Ta bort filter">
-            </form>
-            <!-- fixa så att knappen tar den till sin profil eller log in -->
-
-            <?php
-            \App\Database::isLoggedIn();
-            $userName = $_SESSION["username"];
-            echo "Hej $userName";
-            echo '<ol><a href="/authe/"> Auth // Logga in <a/></ol> <br>';
-            echo '<ol><a href="/products/user"> Till dina produkter<a/></ol> <br>';
-
-
-            echo "<h3>Produkter</h3> <br>";
-            ?>
-            <div class="row row-cols-2 row-cols-md-2 g-4">
-                <?php
-                if (isset($_GET['productTypeId'])) {
-                    foreach ($productsFilter as $productFilter) {
-                        echo
-                            '<div class="col">
-                        <div class="card h-100">
-                            <img src="' . $productFilter->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
-                            <div class="card-body">
-                                <h5 class="card-title">' . $productFilter->productTitle . '</h5>
-                                <p class="card-text"> ' . $productFilter->productDescription . '</p>
-                                <p class="card-text"> ' . $productFilter->price . '</p>
-                                <p class="card-text"><small class="text-muted">' . $productFilter->uploadDate . '</small></p>
-                        </div>
-                        </div>
-                        </div>
-                       ';
-
+        <nav id="products" class="navbar navbar-light nav-icon-placement">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+        <br>
+        <br>
+        <div class="containerborder">
+            <label for="productTypeId" class="form-label" id="typeId"> Kategori<br>
+                <select name="productTypeId" id="productTypeId">
+                    <?php
+                    foreach ($productTypes as $productType) {
+                        echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
                     }
-                } else {
-                    foreach ($products as $product) {
-                        echo
-                            '<div class="col">
+                    ?>
+                </select>
+            </label>
+        </div>
+        <form action=" " method="get">
+            <div class="container center">
+                <div class="row">
+                    <div class="col">
+                        <label for="price" class="form-label"> Min. pris<br>
+                            <input id="priceSize" placeholder="Ange minsta värde" name="lowPrice" type="number"
+                                   value="<?php echo $lowPrice ?>">
+                        </label>
+                    </div>
+                    <div class="col">
+                        <label for="price" class="form-label"> Max. pris<br>
+                            <input id="priceSize" placeholder="Ange max värde" name="highPrice" type="number"
+                                   value="<?php echo $highPrice ?>">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="container center">
+                <div class="row">
+                    <div class="col">
+                        <input class="btn btn-filter" type="submit" value="Filtrera">
+                    </div>
+        </form>
+        <div class="col">
+            <form action="/products/">
+                <input class="btn-removeFilter btn" type="submit" value="Ta bort filter">
+            </form>
+        </div>
+        </div>
+        </div>
+
+        <h1 id="productTitle">Produkter</h1>
+        <div class="row row-cols-2 row-cols-md-2 g-4">
+            <?php
+            if (isset($_GET['productTypeId'])) {
+                foreach ($productsFilter as $productFilter) {
+                    echo
+                        '<div class="col">
         <div class="card h-100">
+            <img  src="' . $productFilter->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
+            <div class="card-body">
+                <p class="title-text">' . $productFilter->productTitle . '</p>
+                <p class="description-text"> ' . $productFilter->productDescription . '</p>
+                <p class="price-text">' . $productFilter->price . ' kr/dag</p>
+                <p class="date-text">' . $productFilter->uploadDate . '</p>
+        </div>
+        </div>
+        </div>
+        </div>
+       ';
+
+                }
+            } else {
+                foreach ($products as $product) {
+                    echo '
+        <div class="col">
+        <a href="/products/details/'.$product->productId .' ">
+        <div class="card h-100"  style="width: 100%"> 
             <img src="' . $product->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
             <div class="card-body">
-                <h5 class="card-title">' . $product->productTitle . '</h5>
-                <p class="card-text"> ' . $product->productDescription . '</p>
-                <p class="card-text"> ' . $product->price . '</p>
-                <p class="card-text"><small class="text-muted">' . $product->uploadDate . '</small></p>
+                <p class="title-text">' . $product->productTitle . '</p>
+                <p class="username-text">' . $product->username . '</p>
+                <p class="description-text" style="max-height: 64px"> ' . $product->productDescription . '</p>
+                <br>
+                <p class="price-text">' . $product->price . ' kr/dag</p>
+                <p class="date-text">' . $product->uploadDate . '</p>
         </div>
         </div>
+        </a>
         </div>
         ';
-                    }
                 }
-                ?>
-            </div>
+            }
+            ?>
+        </div>
         </div>
         <div class="collapse" id="navbarToggleExternalContent">
             <div class="container-nav" id="container">
@@ -175,8 +194,9 @@ class productsController
                         aria-expanded="false" aria-label="Toggle navigation"> CLOSE
                 </button>
                 <br>
-                <p class="nav-font">Hitta produkter</p>
-                <p class="nav-font">Dina produkter</p>
+                <p class="nav-font"><a id="a-navbar" href="/products">Hitta produkter</a></p>
+                <p class="nav-font"><a id="a-navbar" href="/products/user">Dina produkter</a></p>
+                <p class="nav-font"><a id="a-navbar" href="/products/upload">Skapa annons</></p>
                 <p></p>
             </div>
         </div>
@@ -211,26 +231,30 @@ class productsController
     public function details()
     {
         $username = $_SESSION['username'];
-        $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
+        $product = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
 //        var_dump($productId);
-        $product = ltrim($productId, "/products/details/");
+        $productId = ltrim($product, "/products/details/");
 //        var_dump($product);
         if (!$product || !$productId) {
 //            redirectHome();
             echo "inget p ID";
         }
-
-        $productTitle = <<<EOD
-            SELECT *
-            from products 
-            where productId = ?
-            EOD;
-
-        $stmt = db()->prepare($productTitle);
-        $stmt->execute([$product]);
+        $prod = <<<EOD
+        select * from products
+        where productId like ?
+        EOD;
+        $stmt = db()->prepare($prod);
+        $stmt->execute([$productId]);
         $products = $stmt->fetch(PDO::FETCH_OBJ);
 
-//        var_dump($products);
+
+        $products2 = <<<EOD
+        select * from products
+        EOD;
+        $stmt = db()->prepare($products2);
+        $stmt->execute();
+        $products2 = $stmt->fetch(PDO::FETCH_OBJ);
+
 
         $userInfo = <<<EOD
             SELECT *
@@ -242,22 +266,79 @@ class productsController
         $stmt->execute();
         $userInfo = $stmt->fetch(PDO::FETCH_OBJ);
 
-//        var_dump($userInfo);
+        ?>
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport"
+                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+                  crossorigin="anonymous">
+            <link rel="stylesheet" href="../../index.css?v=1">
+            <title>Details</title>
+        </head>
+        <body>
+        <div class="containerborder">
+            <div class="profile-icon-placement">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-circle"
+                     viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd"
+                          d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                </svg>
+            </div>
+            <nav class="navbar navbar-light nav-icon-placement">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+            <br>
+            <br>
+            <br>
+            <?php
+            echo '
+        <div class="col">
+        <div class="card h-100" >
+            <img src="' . $products->image . '" alt="KO" style="max-height: 200vh ; object-fit: cover">
+            <div class="card-body" style="height: 40vh">
+                <p class="title-text">' . $products->productTitle . '</p>
+                <p class="username-text">' . $products->username . '</p>
+                <p class="description-text"> ' . $products->productDescription . '</p>
+                <p class="price-text">' . $products->price . ' kr/dag</p>
+                <p class="date-text">' . $products->uploadDate . '</p>
+                <h3><a href="/products/edit/' . $products2->productId . '"> Redigera produkten <a/></h3>
+        </div>
+        </div>
+        </div>
+        ';
 
-        profilIcon() ;
-
-
-        echo "<h1> $products->productTitle</h1>";
-        echo "<p> $products->productDescription<p>";
-        if ($_SESSION['username'] == $products->username) {
-            echo '<h3><a href="/products/edit/' . $products->productId . '"> redigera produkten <a/></h3> ';
-        }
-        echo " Pris : $products->price kronor i månaden<br> ";
-        echo " Datum : $products->uploadDate <br> ";
-
-        echo "<h3> Kontakta $products->username</h3><br>";
-        echo " <b> Tele:  $userInfo->userTeleNumber<br> Mail : $userInfo->userMail </b><br>";
-
+            ?>
+            <div class="collapse" id="navbarToggleExternalContent">
+                <div class="container-nav" id="container">
+                    <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                            aria-expanded="false" aria-label="Toggle navigation"> CLOSE
+                    </button>
+                    <br>
+                    <p class="nav-font">Hitta produkter</p>
+                    <p class="nav-font">Dina produkter</p>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+        </body>
+        </html>
+        <?php
     }
 
     public function editProduct(string $ProductId)
@@ -280,14 +361,6 @@ class productsController
         $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $conn = mysqli_connect($host, $user, $password, $db);
-
-        $sql = "select image from products order by productId desc limit 1";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_array($result);
-
-        $image_src = $row['image'];
 
         $productType = <<<EOD
         SELECT productTypeId, productTypeName
@@ -325,6 +398,17 @@ class productsController
         </head>
         <body>
         <?php profilIcon(); ?>
+        <nav class="navbar navbar-light nav-icon-placement">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+        <br>
+        <br>
         <div class="containerborder">
             <div class="center mb-4 m-top">
                 <a href="/products/user"> Tillbaka</a>
@@ -367,8 +451,22 @@ class productsController
                     <input type='submit' class="btn btn-login" value='Lägg Till Annons' name='but_upload'>
                 </div>
             </form>
-            <img alt="produktBild" src='<?php echo $image_src; ?>'
         </div>
+        <div class="collapse" id="navbarToggleExternalContent">
+            <div class="container-nav containerborder" id="containerborder">
+                <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation"> CLOSE
+                </button>
+                <br>
+                <p class="nav-font">Hitta produkter</p>
+                <p class="nav-font">Dina produkter</p>
+                <p></p>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
         </body>
         </html>
         <?php
@@ -381,15 +479,16 @@ class productsController
         $db = "ga-lou";
         $user = "ga-lou";
         $password = "rödbrunrånarluva";
+
         $dsn = "mysql:host=$host;port=3306;dbname=$db;charset=UTF8";
         $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $conn = mysqli_connect($host, $user, $password, $db);
-
         include("../config.php");
         $username = $_SESSION["username"];
+        echo $username;
+
         if (isset($_POST['but_upload'])) {
 
             $name = $_FILES['file']['name'];
@@ -411,27 +510,28 @@ class productsController
                     $image = 'data:image/' . $imageFileType . ';base64,' . $image_base64;
                     // Insert record
 
-                    $productId = random_int(0, 10000000);
+                    $productId = random_int(0, 100000);
                     $productTitle = $_POST["productTitle"] ?? "Namn saknas";
                     $productDescription = $_POST["productDescription"] ?? "Beskrivning saknas";
                     $productTypeId = $_POST["productTypeId"] ?? "Fel id";
                     $productPrice = $_POST['price'] ?? "Fel pris";
                     $userName = $_SESSION['username'];
 
-                    $query = "insert into products(productId, productTitle, productDescription, productTypeId, username, price, image) values('$productId','$productTitle','$productDescription','$productTypeId','$username','$productPrice','$image')";
-                    mysqli_query($conn, $query);
+                    $query = <<<EOD
+                    insert into products(productId, productTitle, productDescription, productTypeId, username, price, image) values('$productId','$productTitle','$productDescription','$productTypeId','$username','$productPrice','$image')
+                    EOD;
+
+                    $stmt = db()->prepare($query);
+                    $stmt->execute();
+                    $query = $stmt->fetchAll();
                 }
+
             }
+
         }
         $sql = "select image from image order by id desc limit 1";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_array($result);
 
-        $image_src = $row['image'];
-
-        SimpleRouter::response()->redirect('/products/user');
-
-
+        SimpleRouter::response()->redirect("/products");
     }
 
     public function uploadImage()
@@ -728,7 +828,7 @@ class productsController
             <link rel="stylesheet" href="../index.css?v=1">
             <title>Userproducts</title>
         </head>
-    <body>
+        <body>
         <?php profilIcon() ?>
         <nav class="navbar navbar-light nav-icon-placement">
             <div class="container-fluid">
@@ -745,17 +845,18 @@ class productsController
         </div>
 
         <div class="row row-cols-2 row-cols-md-2 g-4" id="editCardMargin">
-        <?php
-        foreach ($products as $product) {
-            echo '
+            <?php
+            foreach ($products as $product) {
+                echo '
                 <div class="col m-above" xmlns="http://www.w3.org/1999/html">
                      <div class="card h-100" style="width: 100%;">
                           <img src="' . $product->image . '" alt="productBild" style="max-height: 15vh ; object-fit: cover">
                           <div class="card-body">
-                                <h5 class="card-title">' . $product->productTitle . '</h5>
-                                <p class="card-text"> ' . $product->productDescription . '</p>
-                                <p class="card-text"> ' . $product->price . ' kr/dag</p>
-                                <p class="card-text"><small class="text-muted">' . $product->uploadDate . '</small></p>
+                                <p class="title-text" style="margin-bottom: 5px">' . $product->productTitle . '</p>
+                                <p class="description-text" style="max-height: 64px"> ' . $product->productDescription . '</p>
+                                <br>
+                                <p class="price-text"> ' . $product->price . ' kr/dag</p>
+                                <p class="date-text">' . $product->uploadDate . '</p>
                           </div>
                      </div>
                 </div>   
@@ -770,25 +871,27 @@ class productsController
             }
             ?>
 
+        </div>
+        <div class="collapse" id="navbarToggleExternalContent">
+            <div class="container-nav" id="container">
+                <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation"> CLOSE
+                </button>
+                <br>
+                <p class="nav-font"><a href="/products">Hitta produkter</a></p>
+                <p class="nav-font"><a href="/products/user">Dina produkter</a></p>
+                <p class="nav-font"><a href="/products/upload">Skapa annons</a></p>
+                <p></p>
             </div>
-            <div class="collapse" id="navbarToggleExternalContent">
-                <div class="container-nav containerborder" id="containerborder">
-                    <button class="navbar-toggler nav-icon-close" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                            aria-expanded="false" aria-label="Toggle navigation"> CLOSE
-                    </button>
-                    <br>
-                    <p class="nav-font">Hitta produkter</p>
-                    <p class="nav-font">Dina produkter</p>
-                </div>
-            </div>
+        </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                    crossorigin="anonymous"></script>
-            </body>
-            </html>
-            <?php
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+        </body>
+        </html>
+        <?php
 
 
     }

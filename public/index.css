@@ -7,6 +7,8 @@
         top: 0;
         position: absolute;
         width: 416px;
+        right: 0;
+        margin-right: 50%;
         height: 100%;
         background-color: #54595E;
     }
@@ -31,7 +33,7 @@
         position: absolute;
         width: 52%;
         height: 100%;
-        background-color: green;
+        background-color: #54595E;
     }
     .profile-icon-placement {
         top: 30px;
@@ -107,6 +109,8 @@
 
 a{
  color: black;
+    text-decoration: none;
+
 }
 h1{
     padding-top: 22px;
@@ -123,6 +127,9 @@ h1{
 #editCardMargin{
     margin-left: 5%;
 }
+#a-navbar{
+    color: white;
+}
 .btn-edit{
     margin-left: 5%;
 }
@@ -131,16 +138,101 @@ h1{
     height: 40px;
     color: white;
 }
+.btn-filter {
+    margin-top: 22px;
+    background-color: #2152B0;
+    height: 40px;
+    color: white;
+}
 .btn-cancell {
     margin-top: 22px;
     border-color: black;
-    width: 85px;
     height: 40px;
     color: black;
 
+}
+.btn-removeFilter {
+    margin-top: 22px;
+    border-color: black;
+    height: 40px;
+    color: black;
 
+}
+#products{
+    margin-left: 1vw;
+}
+#typeId{
+    margin-left: 13.5%;
+}
+#productTitle{
+    margin-left:7.5%;
+    margin-bottom: 20px;
+}
+#priceSize{
+    width: 100px;
+    margin-left: 1vw;
 }
 .btn-login:hover {
     background-color: #05348D;
     color: white;
+}
+.date-text{
+    font-family: 'Inter';
+    font-size: 14px;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    text-align: right;
+    margin-right: 10px;
+    color: #54595E;
+    font-weight: lighter;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    width: 50%;
+    height: 18px;
+}
+.price-text{
+    font-family: 'Inter';
+    font-size: 14px;
+    bottom: 0;
+    position: absolute;
+    text-align: left;
+    color: #54595E;
+    font-weight: lighter;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    width: 50%;
+    height: 18px;
+
+}
+.description-text{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 95%;
+    font-family: 'Inter';
+    font-size: 16px;
+    color: #54595E;
+    font-weight: normal;
+    line-height: 1;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+.title-text{
+    font-family: 'Inter';
+    font-size: 18px;
+    color: #000000;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+.username-text{
+    font-family: 'Inter';
+    font-size: 18px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    color: #54595E;
+    font-weight: lighter;
 }
