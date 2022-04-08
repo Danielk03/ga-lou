@@ -43,7 +43,7 @@ class authController
             <div id='container' class='center mb-4'>
                 <form action='/products/upload'>
                     <label class='form-label'>
-                        <input class='btn btn-login' type='submit' value='Ladda Upp produkt '>
+                        <input class='btn btn-login' type='submit' value='Lägg till annons '>
                     </label>
                 </form>
             </div>

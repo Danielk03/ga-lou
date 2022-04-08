@@ -10,7 +10,6 @@ class productsController
 {
     public function productIndex()
     {
-
         \App\Database::isLoggedIn();
 
         $userName = $_SESSION["username"];
@@ -50,28 +49,6 @@ class productsController
         $stmt = db()->prepare($productsFilter);
         $stmt->execute();
         $productsFilter = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        // Försöka få rätt type id när man valt ett till
-//        $productTypeValues = <<<EOD
-//        select *
-//        from productTypes
-//        where productTypeId = '$productType';
-//        EOD;
-//        $stmt = db()->prepare($productTypeValues);
-//        $stmt->execute();
-//        $productTypeValues = $stmt->fetchAll();
-//
-//        var_dump($productTypeValues);
-//
-//        if (isset($_GET['productTypeId'])) {
-//            foreach ($productTypeValues as $productTypeValue) {
-//                echo '<option value="' . $productTypeValue->productTypeId . $productType->productTypeId . '">' . $productTypeValue->productTypeName . '</option>';
-//            }
-//        } else {
-//            foreach ($productTypes as $productType) {
-//                echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
-//            }
-//        }
         ?>
         <!doctype html>
         <html lang="en">
@@ -86,60 +63,58 @@ class productsController
             <link rel="stylesheet" href="../index.css?v=1">
             <title>Document</title>
         </head>
-        <body>
-        <?php profilIcon() ?>
-
-        <nav id="products" class="navbar navbar-light nav-icon-placement">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
-        <br>
-        <br>
-        <div class="containerborder">
-            <label for="productTypeId" class="form-label" id="typeId"> Kategori<br>
-                <select name="productTypeId" id="productTypeId">
-                    <?php
-                    foreach ($productTypes as $productType) {
-                        echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
-                    }
-                    ?>
-                </select>
-            </label>
-        </div>
-        <form action=" " method="get">
-            <div class="container center">
-                <div class="row">
-                    <div class="col">
-                        <label for="price" class="form-label"> Min. pris<br>
-                            <input id="priceSize" placeholder="Ange minsta värde" name="lowPrice" type="number"
-                                   value="<?php echo $lowPrice ?>">
-                        </label>
+        <div>
+            <?php profilIcon() ?>
+            <nav id="products" class="navbar navbar-light nav-icon-placement">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+            <br>
+            <br>
+            <div class="containerborder">
+                <form action=" " method="get">
+                    <div class="container center">
+                        <div class="row">
+                            <div class="col">
+                                <label for="productTypeId" class="form-label" id="typeId"> Kategori<br>
+                                    <select name="productTypeId" id="productTypeId">
+                                        <?php
+                                        foreach ($productTypes as $productType) {
+                                            echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </label>
+                                <label for="price" class="form-label"> Min. pris<br>
+                                    <input id="priceSize" placeholder="Ange minsta värde" name="lowPrice" type="number"
+                                           value="<?php echo $lowPrice ?>">
+                                </label>
+                            </div>
+                            <div class="col">
+                                <label for="price" class="form-label"> Max. pris<br>
+                                    <input id="priceSize" placeholder="Ange max värde" name="highPrice" type="number"
+                                           value="<?php echo $highPrice ?>">
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col">
-                        <label for="price" class="form-label"> Max. pris<br>
-                            <input id="priceSize" placeholder="Ange max värde" name="highPrice" type="number"
-                                   value="<?php echo $highPrice ?>">
-                        </label>
-                    </div>
+                    <div class="container center">
+                        <div class="row">
+                            <div class="col">
+                                <input class="btn btn-filter" type="submit" value="Filtrera">
+                            </div>
+                </form>
+                <div class="col">
+                    <form action="/products/">
+                        <input class="btn-removeFilter btn" type="submit" value="Ta bort filter">
+                    </form>
                 </div>
             </div>
-            <div class="container center">
-                <div class="row">
-                    <div class="col">
-                        <input class="btn btn-filter" type="submit" value="Filtrera">
-                    </div>
-        </form>
-        <div class="col">
-            <form action="/products/">
-                <input class="btn-removeFilter btn" type="submit" value="Ta bort filter">
-            </form>
-        </div>
-        </div>
         </div>
 
         <h1 id="productTitle">Produkter</h1>
@@ -147,21 +122,23 @@ class productsController
             <?php
             if (isset($_GET['productTypeId'])) {
                 foreach ($productsFilter as $productFilter) {
-                    echo
-                        '<div class="col">
-        <div class="card h-100">
-            <img  src="' . $productFilter->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
+                    echo '
+        <div class="col">
+        <a href="/products/details/' . $productFilter->productId . ' ">
+        <div class="card h-100"  style="width: 100%"> 
+            <img src="' . $productFilter->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
             <div class="card-body">
                 <p class="title-text">' . $productFilter->productTitle . '</p>
-                <p class="description-text"> ' . $productFilter->productDescription . '</p>
+                <p class="username-text">' . $productFilter->username . '</p>
+                <p class="description-text" style="max-height: 64px"> ' . $productFilter->productDescription . '</p>
+                <br>
                 <p class="price-text">' . $productFilter->price . ' kr/dag</p>
                 <p class="date-text">' . $productFilter->uploadDate . '</p>
         </div>
         </div>
+        </a>
         </div>
-        </div>
-       ';
-
+        ';
                 }
             } else {
                 foreach ($products as $product) {
@@ -185,6 +162,7 @@ class productsController
                 }
             }
             ?>
+        </div>
         </div>
         </div>
         <?php navbar(); ?>
@@ -219,20 +197,18 @@ class productsController
     public function details()
     {
         $username = $_SESSION['username'];
-        $product = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
-//        var_dump($productId);
-        $productId = ltrim($product, "/products/details/");
-//        var_dump($product);
+        $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
+        $product = ltrim($productId, "/products/details/");
         if (!$product || !$productId) {
 //            redirectHome();
-            echo "inget p ID";
+            echo "inget produkt ID";
         }
         $prod = <<<EOD
         select * from products
         where productId like ?
         EOD;
         $stmt = db()->prepare($prod);
-        $stmt->execute([$productId]);
+        $stmt->execute([$product]);
         $products = $stmt->fetch(PDO::FETCH_OBJ);
 
 
@@ -270,14 +246,7 @@ class productsController
         </head>
         <body>
         <div class="containerborder">
-            <div class="profile-icon-placement">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-circle"
-                     viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                    <path fill-rule="evenodd"
-                          d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                </svg>
-            </div>
+            <?php profilIcon();?>
             <nav class="navbar navbar-light nav-icon-placement">
                 <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -300,14 +269,15 @@ class productsController
                 <p class="username-text">' . $products->username . '</p>
                 <p class="description-text"> ' . $products->productDescription . '</p>
                 <p class="price-text">' . $products->price . ' kr/dag</p>
-                <p class="date-text">' . $products->uploadDate . '</p>
-                <h3><a href="/products/edit/' . $products2->productId . '"> Redigera produkten <a/></h3>
-        </div>
-        </div>
-        </div>
-        ';
-
+                <p class="date-text">' . $products->uploadDate . '</p>';
+            if($username == $products->username){
+                    echo '<h3><a href="/products/edit/' . $products->productId . '"> Redigera produkten <a/></h3>';
+            }
             ?>
+        </div>
+        </div>
+        </div>
+
             <?php navbar(); ?>
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
