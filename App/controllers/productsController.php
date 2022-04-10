@@ -126,7 +126,7 @@ class productsController
                 foreach ($productsFilter as $productFilter) {
                     echo '
         <div class="col">
-        <a href="/products/details/' . $productFilter->productId . ' ">
+        <a id="a-card" href="/products/details/' . $productFilter->productId . ' ">
         <div class="card h-100"  style="width: 100%"> 
             <img src="' . $productFilter->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
             <div class="card-body">
@@ -148,7 +148,7 @@ class productsController
                 foreach ($products as $product) {
                     echo '
         <div class="col">
-        <a href="/products/details/' . $product->productId . ' ">
+        <a id="a-card" href="/products/details/' . $product->productId . ' ">
         <div class="card h-100"  style="width: 100%"> 
             <img src="' . $product->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
             <div class="card-body">

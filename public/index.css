@@ -134,6 +134,9 @@ h1 {
     color: white;
     text-decoration: none;
 }
+#a-card{
+    text-decoration: none;
+}
 
 .btn-edit {
     margin-left: 5%;
