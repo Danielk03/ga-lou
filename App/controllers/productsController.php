@@ -10,10 +10,12 @@ class productsController
 {
     public function productIndex()
     {
+        //kollar om man är inloggad
         \App\Database::isLoggedIn();
 
         $userName = $_SESSION["username"];
 
+        // Tar in all data som krävs från databas
         $products = <<<EOD
         select * from products;
         EOD;
@@ -29,18 +31,17 @@ class productsController
         $stmt->execute();
         $productTypes = $stmt->fetchAll();
 
-
-        $lowPrice = $_GET['lowPrice'] ?? 0;
-        $highPrice = $_GET['highPrice'] ?? 10000;
-        $productType = $_GET['productTypeId'] ?? null;
-
-        // utan price filter
         $products = <<<EOD
         select * from products;
         EOD;
         $stmt = db()->prepare($products);
         $stmt->execute();
         $products = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        //variabler tillfiltrering
+        $lowPrice = $_GET['lowPrice'] ?? 0;
+        $highPrice = $_GET['highPrice'] ?? 10000;
+        $productType = $_GET['productTypeId'] ?? null;
 
         $productsFilter = <<<EOD
         select * from products
@@ -51,7 +52,7 @@ class productsController
         $productsFilter = $stmt->fetchAll(PDO::FETCH_OBJ);
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"
@@ -120,6 +121,7 @@ class productsController
         <h1 id="productTitle">Produkter</h1>
         <div class="row row-cols-2 row-cols-md-2 g-4">
             <?php
+            // om användaren vill filtrera
             if (isset($_GET['productTypeId'])) {
                 foreach ($productsFilter as $productFilter) {
                     echo '
@@ -140,7 +142,9 @@ class productsController
         </div>
         ';
                 }
-            } else {
+            }
+            //ingen filtrering
+            else {
                 foreach ($products as $product) {
                     echo '
         <div class="col">
@@ -232,7 +236,7 @@ class productsController
 
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"
@@ -246,7 +250,7 @@ class productsController
         </head>
         <body>
         <div class="containerborder">
-            <?php profilIcon();?>
+            <?php profilIcon(); ?>
             <nav class="navbar navbar-light nav-icon-placement">
                 <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -270,19 +274,23 @@ class productsController
                 <p class="description-text"> ' . $products->productDescription . '</p>
                 <p class="price-text">' . $products->price . ' kr/dag</p>
                 <p class="date-text">' . $products->uploadDate . '</p>';
-            if($username == $products->username){
-                    echo '<h3><a href="/products/edit/' . $products->productId . '"> Redigera produkten <a/></h3>';
+            if ($username == $products->username) {
+                echo ' <label for="redigera" >
+                            <form action="/products/edit/' . $products->productId . '">
+                                <input class="btn btn-login" type="submit" name="redigera" value="Redigera">
+                            </form>
+                        </label>';
             }
             ?>
         </div>
         </div>
         </div>
 
-            <?php navbar(); ?>
+        <?php navbar(); ?>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                    crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
         </body>
         </html>
         <?php
@@ -335,7 +343,7 @@ class productsController
         }
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"
@@ -677,7 +685,7 @@ class productsController
 
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"

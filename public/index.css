@@ -3,6 +3,7 @@
         margin: 0 auto;
         max-width: 800px;
     }
+
     .container-nav {
         top: 0;
         position: absolute;
@@ -12,6 +13,7 @@
         height: 100%;
         background-color: #54595E;
     }
+
     .profile-icon-placement {
         top: 30px;
         position: relative;
@@ -19,6 +21,7 @@
         width: 50px;
         left: 720px;
     }
+
     .nav-icon-placement {
         top: 30px;
         position: absolute;
@@ -26,6 +29,7 @@
     }
 
 }
+
 @media screen and (max-width: 800px ) and (min-width: 240px) {
     .container-nav {
         top: 0;
@@ -35,6 +39,7 @@
         height: 100%;
         background-color: #54595E;
     }
+
     .profile-icon-placement {
         top: 30px;
         right: 30px;
@@ -42,6 +47,7 @@
         height: 50px;
         width: 50px;
     }
+
     .nav-icon-placement {
         top: 30px;
         left: 30px;
@@ -56,18 +62,9 @@
     width: 5vw;
 }
 
-.container-fluid {
-    margin-left: 0;
-    width: 50vw;
-    height: 10px;
-    alignment: left;
-    padding-left: 0;
-}
-
 .nav-font {
     font-weight: bold;
     font-size: large;
-    alignment: center;
     color: white;
     position: relative;
     text-align: center;
@@ -76,7 +73,7 @@
 
 .text-time {
     font-size: 2px;
-    alignment: right;
+    text-align: right;
     margin-right: 0;
     background-color: grey;
     height: 40px;
@@ -103,47 +100,58 @@
 .m-top {
     padding-top: 150px;
 }
+
 .m-above {
     padding-top: 50px;
 }
 
-a{
- color: black;
-    text-decoration: none;
+a {
+    color: black;
 
 }
-h1{
+
+h1 {
     padding-top: 22px;
 }
-#container{
+
+#container {
     text-align: center;
 }
-#editButtons{
+
+#editButtons {
     width: 78%;
 }
-#editMargin{
+
+#editMargin {
     margin-top: 80px;
 }
-#editCardMargin{
+
+#editCardMargin {
     margin-left: 5%;
 }
-#a-navbar{
+
+#a-navbar {
     color: white;
+    text-decoration: none;
 }
-.btn-edit{
+
+.btn-edit {
     margin-left: 5%;
 }
+
 .btn-login {
     background-color: #2152B0;
     height: 40px;
     color: white;
 }
+
 .btn-filter {
     margin-top: 22px;
     background-color: #2152B0;
     height: 40px;
     color: white;
 }
+
 .btn-cancell {
     margin-top: 22px;
     border-color: black;
@@ -151,6 +159,7 @@ h1{
     color: black;
 
 }
+
 .btn-removeFilter {
     margin-top: 22px;
     border-color: black;
@@ -158,25 +167,31 @@ h1{
     color: black;
 
 }
-#products{
+
+#products {
     margin-left: 1vw;
 }
-#typeId{
+
+#typeId {
     margin-left: 13.5%;
 }
-#productTitle{
-    margin-left:7.5%;
+
+#productTitle {
+    margin-left: 7.5%;
     margin-bottom: 20px;
 }
-#priceSize{
+
+#priceSize {
     width: 100px;
     margin-left: 1vw;
 }
+
 .btn-login:hover {
     background-color: #05348D;
     color: white;
 }
-.date-text{
+
+.date-text {
     font-family: 'Inter';
     font-size: 14px;
     bottom: 0;
@@ -192,7 +207,8 @@ h1{
     width: 50%;
     height: 18px;
 }
-.price-text{
+
+.price-text {
     font-family: 'Inter';
     font-size: 14px;
     bottom: 0;
@@ -207,7 +223,8 @@ h1{
     height: 18px;
 
 }
-.description-text{
+
+.description-text {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -221,14 +238,16 @@ h1{
     margin-right: 10px;
 
 }
-.title-text{
+
+.title-text {
     font-family: 'Inter';
     font-size: 18px;
     color: #000000;
     font-weight: normal;
     margin-bottom: 0;
 }
-.username-text{
+
+.username-text {
     font-family: 'Inter';
     font-size: 18px;
     margin-left: 10px;

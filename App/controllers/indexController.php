@@ -10,7 +10,7 @@ class indexController
     {
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"

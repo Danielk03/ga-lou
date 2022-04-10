@@ -5,7 +5,7 @@ require_once "../vendor/pecee/simple-router/helpers.php";
 require_once "../vendor/autoload.php";
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"

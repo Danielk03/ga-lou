@@ -13,7 +13,7 @@ class authController
         \App\Database::auth();
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"
@@ -30,7 +30,8 @@ class authController
                        <input class='btn btn-login' type='submit' value='Logga in'>
                        </form>
                        </div>";
-                echo "<br> <div class='center mb-4' <form action='/authe/register'> 
+                echo "<br> <div class='center mb-4'>
+                        <form action='/authe/register'> 
                        <input class='btn btn-login' type='submit' value='Registrera dig'>
                        </form>
                        </div>";
@@ -46,17 +47,11 @@ class authController
                         <input class='btn btn-login' type='submit' value='Lägg till annons '>
                     </label>
                 </form>
-            </div>
-
-            <div id='container' class='center mb-4'>
                 <form action='/products/user'>
                     <label class='form-label'>
                         <input class='btn btn-login' type='submit' value='Dina produkter '>
                     </label>
                 </form>
-            </div>
-
-            <div id='container' class='center mb-4'>
                 <form action='/authe/edit'>
                     <input class='btn btn-login' type='submit' value='Redigera Profil '>
                 </form>
@@ -64,11 +59,7 @@ class authController
             <div class='m-top center'><a href='/authe/logout/'>Logga ut</a><br>
                 <a href='/authe/delete/'>Radera konto</a>
             </div>
-
-
-        </div>
         <?php navbar();?>
-
         </body>
         </html>
         <?php
@@ -84,7 +75,7 @@ class authController
         where username = '$userName';
         EOD;
 
-        $stmt = db()->prepare($removeUser);
+        $stmt=db()->prepare($removeUser);
         $stmt->execute();
 
         session_destroy();
@@ -97,7 +88,7 @@ class authController
         \App\Database::auth();
         ?>
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"
@@ -112,25 +103,29 @@ class authController
                 <a href="/"> Tillbaka</a>
                 <h1>Logga in</h1>
             </div>
-            <form action="" method="post">
+            <form action=" " method="post">
                 <div class="mb-4">
                     <label for="username" class="form-label">Användarnamn
-                        <input type="text" class="form-control" name="username" placeholder="ex.Jonas123">
+                        <input type="text" id="username" class="form-control" name="username" placeholder="ex.Jonas123">
                     </label>
                 </div>
                 <div class="mb-4">
                     <label for="password" class="form-label">Löserord
-                        <input type="password" class="form-control" name="password" placeholder="******">
+                        <input type="password" id="password" class="form-control" name="password" placeholder="******">
                     </label>
                 </div>
                 <div class="center">
                     <input class="btn btn-login" type="submit" name="login" value="Logga In">
+                </div>
             </form>
             <form action="/">
+                <div class="center">
                 <input class="btn btn-cancell" type="submit" value="Avbryt">
+                </div>
             </form>
+            <div class="center m-above">
             <a href="/authe/register/">Registrera dig</a>
-        </div>
+            </div>
         <?php navbar();?>
         </body>
         </html>
@@ -147,9 +142,10 @@ class authController
     {
         \App\Database::register();
         ?>
+        echo heje
 
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"
@@ -164,7 +160,7 @@ class authController
                 <a href="/"> Tillbaka</a>
                 <h1> Registrera dig</h1>
             </div>
-            <form action="" method="post">
+            <form action="  " method="post">
                 <div class="mb-4">
                     <label for="username" class="form-label">Användarnamn
                         <input type="text" class="form-control" name="username" id="username" placeholder="ex. Jonas123"
@@ -191,11 +187,13 @@ class authController
                 </div>
                 <div class="center">
                     <input class="btn btn-login" type="submit" name="action" value="Registera">
+                </div>
             </form>
             <form action="/">
+                <div class="center">
                 <input class="btn btn-cancell" type="submit" value="Avbryt">
+                </div>
             </form>
-        </div>
         <?php navbar();?>
 
         </body>
@@ -227,7 +225,7 @@ class authController
         ?>
 
         <!doctype html>
-        <html lang="en">
+        <html lang="sv">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport"

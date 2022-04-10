@@ -50,7 +50,6 @@ function navbar(){
                 <p class="nav-font"><a id="a-navbar" href="/products">Hitta produkter</a></p>
                 <p class="nav-font"><a id="a-navbar" href="/products/user">Dina produkter</a></p>
                 <p class="nav-font"><a id="a-navbar" href="/products/upload">Skapa annons</></p>
-                <p></p>
             </div>
         </div>
         <?php
