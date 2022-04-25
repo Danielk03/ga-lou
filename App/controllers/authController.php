@@ -142,8 +142,6 @@ class authController
     {
         \App\Database::register();
         ?>
-        echo heje
-
         <!doctype html>
         <html lang="sv">
         <head>

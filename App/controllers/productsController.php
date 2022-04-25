@@ -65,7 +65,7 @@ class productsController
             <title>Document</title>
         </head>
         <div>
-            <?php profilIcon() ?>
+            <?php profilIcon(); ?>
             <nav id="products" class="navbar navbar-light nav-icon-placement">
                 <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -365,7 +365,7 @@ class productsController
         <br>
         <br>
         <div class="containerborder">
-            <div class="center mb-4 m-top">
+            <div class="center mb-4 ">
                 <a href="/products/user"> Tillbaka</a>
                 <h1> Redigera Annons</h1>
             </div>
@@ -640,7 +640,9 @@ class productsController
             </form>
         </div>
         <?php navbar(); ?>
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
         </body>
         </html>
         <?php
