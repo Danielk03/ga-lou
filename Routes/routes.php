@@ -19,6 +19,7 @@ SimpleRouter::get('/products/image/', 'productsController@uploadImage');
 SimpleRouter::post('/products/image/', 'productsController@uploadImage');
 //----------------Auth---------------------------------
 SimpleRouter::get('/authe/', 'authController@authIndex');
+SimpleRouter::post('/authe/delete', 'authController@delete');
 SimpleRouter::get('/authe/delete', 'authController@delete');
 SimpleRouter::post('/authe/login/', 'authController@login');
 SimpleRouter::get('/authe/login/', 'authController@login');

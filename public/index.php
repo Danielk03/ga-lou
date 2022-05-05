@@ -15,7 +15,7 @@ require_once "../vendor/autoload.php";
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
           crossorigin="anonymous">
     <link rel="stylesheet" href="/index.css?v=1">
-    <title>Document</title>
+    <title> </title>
 </head>
 <body>
 
@@ -37,10 +37,11 @@ SimpleRouter::error(function (Request $request,\Exception $exception) {
     switch ($exception->getCode()) {
         case 404;
             echo '404';
-//            SimpleRouter::response()->redirect('/');
+            SimpleRouter::response()->redirect('/');
+
             break;
         default;
-//            response()->redirect('/');
+            response()->redirect('/');
     }
 });
 

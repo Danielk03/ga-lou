@@ -51,71 +51,54 @@ class productsController
         $stmt->execute();
         $productsFilter = $stmt->fetchAll(PDO::FETCH_OBJ);
         ?>
+
         <!doctype html>
-        <html lang="sv">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-                  crossorigin="anonymous">
-            <link rel="stylesheet" href="../index.css?v=1">
-            <title>Document</title>
-        </head>
-        <div>
-            <?php profilIcon(); ?>
-            <nav id="products" class="navbar navbar-light nav-icon-placement">
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-            </nav>
-            <br>
-            <br>
-            <div class="containerborder">
-                <form action=" " method="get">
-                    <div class="container center">
-                        <div class="row">
-                            <div class="col">
-                                <label for="productTypeId" class="form-label" id="typeId"> Kategori<br>
-                                    <select name="productTypeId" id="productTypeId">
-                                        <?php
-                                        foreach ($productTypes as $productType) {
-                                            echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </label>
-                                <label for="price" class="form-label"> Min. pris<br>
-                                    <input id="priceSize" placeholder="Ange minsta värde" name="lowPrice" type="number"
-                                           value="<?php echo $lowPrice ?>">
-                                </label>
-                            </div>
-                            <div class="col">
-                                <label for="price" class="form-label"> Max. pris<br>
-                                    <input id="priceSize" placeholder="Ange max värde" name="highPrice" type="number"
-                                           value="<?php echo $highPrice ?>">
-                                </label>
-                            </div>
+        <?php
+        head();
+        navbarButton();
+        profilIcon();
+        ?>
+        <br>
+        <br>
+        <div class="containerborder">
+            <form action=" " method="get">
+                <div class="container center">
+                    <div class="row">
+                        <div class="col">
+                            <label for="productTypeId" class="form-label" id="typeId"> Kategori<br>
+                                <select name="productTypeId" id="productTypeId">
+                                    <?php
+                                    foreach ($productTypes as $productType) {
+                                        echo '<option value="' . $productType->productTypeId . '">' . $productType->productTypeName . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </label>
+                            <label for="price" class="form-label"> Min. pris<br>
+                                <input id="priceSize" placeholder="Ange minsta värde" name="lowPrice" type="number"
+                                       value="<?php echo $lowPrice ?>">
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label for="price" class="form-label"> Max. pris<br>
+                                <input id="priceSize" placeholder="Ange max värde" name="highPrice" type="number"
+                                       value="<?php echo $highPrice ?>">
+                            </label>
                         </div>
                     </div>
-                    <div class="container center">
-                        <div class="row">
-                            <div class="col">
-                                <input class="btn btn-filter" type="submit" value="Filtrera">
-                            </div>
-                </form>
-                <div class="col">
-                    <form action="/products/">
-                        <input class="btn-removeFilter btn" type="submit" value="Ta bort filter">
-                    </form>
                 </div>
+                <div class="container center">
+                    <div class="row">
+                        <div class="col">
+                            <input class="btn btn-filter" type="submit" value="Filtrera">
+                        </div>
+            </form>
+            <div class="col">
+                <form action="/products/">
+                    <input class="btn-removeFilter btn" type="submit" value="Ta bort filter">
+                </form>
             </div>
+        </div>
         </div>
 
         <h1 id="productTitle">Produkter</h1>
@@ -142,44 +125,40 @@ class productsController
         </div>
         ';
                 }
-            }
-            //ingen filtrering
+            } //ingen filtrering
             else {
                 foreach ($products as $product) {
                     echo '
-        <div class="col">
-        <a id="a-card" href="/products/details/' . $product->productId . ' ">
-        <div class="card h-100"  style="width: 100%"> 
-            <img src="' . $product->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
-            <div class="card-body">
-                <p class="title-text">' . $product->productTitle . '</p>
-                <p class="username-text">' . $product->username . '</p>
-                <p class="description-text" style="max-height: 64px"> ' . $product->productDescription . '</p>
-                <br>
-                <p class="price-text">' . $product->price . ' kr/dag</p>
-                <p class="date-text">' . $product->uploadDate . '</p>
-        </div>
-        </div>
-        </a>
-        </div>
-        ';
+                    <div class="col">
+                    <a id="a-card" href="/products/details/' . $product->productId . ' ">
+                    <div class="card h-100"  style="width: 100%"> 
+                        <img src="' . $product->image . '" alt="KO" style="max-height: 15vh ; object-fit: cover">
+                        <div class="card-body">
+                            <p class="title-text">' . $product->productTitle . '</p>
+                            <p class="username-text">' . $product->username . '</p>
+                            <p class="description-text" style="max-height: 64px"> ' . $product->productDescription . '</p>
+                            <br>
+                            <p class="price-text">' . $product->price . ' kr/dag</p>
+                            <p class="date-text">' . $product->uploadDate . '</p>
+                    </div>
+                    </div>
+                    </a>
+                    </div>';
                 }
             }
             ?>
         </div>
         </div>
         </div>
-        <?php navbar(); ?>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        </body>
-        </html>
         <?php
+        navbar();
+        script();
+        endTags();
     }
 
     public function delete(string $ProductId)
     {
+        \App\Database::isLoggedIn();
 
         $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
         $product = ltrim($productId, "/products/delete/");
@@ -200,6 +179,8 @@ class productsController
 
     public function details()
     {
+        \App\Database::isLoggedIn();
+
         $username = $_SESSION['username'];
         $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
         $product = ltrim($productId, "/products/details/");
@@ -207,14 +188,13 @@ class productsController
 //            redirectHome();
             echo "inget produkt ID";
         }
-        $prod = <<<EOD
+        $products = <<<EOD
         select * from products
         where productId like ?
         EOD;
-        $stmt = db()->prepare($prod);
+        $stmt = db()->prepare($products);
         $stmt->execute([$product]);
         $products = $stmt->fetch(PDO::FETCH_OBJ);
-
 
         $products2 = <<<EOD
         select * from products
@@ -223,9 +203,8 @@ class productsController
         $stmt->execute();
         $products2 = $stmt->fetch(PDO::FETCH_OBJ);
 
-
         $userInfo = <<<EOD
-            SELECT *
+            SELECT username,userMail,userTeleNumber
             from users 
             where username = '$username'
             EOD;
@@ -236,86 +215,63 @@ class productsController
 
         ?>
         <!doctype html>
-        <html lang="sv">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-                  crossorigin="anonymous">
-            <link rel="stylesheet" href="../../index.css?v=1">
-            <title>Details</title>
-        </head>
-        <body>
+        <?php
+        head();
+        navbarButton();
+        profilIcon();
+
+        echo '
         <div class="containerborder">
-            <?php profilIcon(); ?>
-            <nav class="navbar navbar-light nav-icon-placement">
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-            </nav>
-            <br>
-            <br>
-            <br>
-            <?php
-            echo '
-        <div class="col">
+        <div class="col m-above">
         <div class="card h-100" >
             <img src="' . $products->image . '" alt="KO" style="max-height: 200vh ; object-fit: cover">
             <div class="card-body" style="height: 40vh">
                 <p class="title-text">' . $products->productTitle . '</p>
-                <p class="username-text">' . $products->username . '</p>
+                <p class="username-text">' . 'Säljare: ' . $products->username . '<br> Telefonnummer: ' . $userInfo->userTeleNumber . '<br>Epost: ' . $userInfo->userMail . '</p>
                 <p class="description-text"> ' . $products->productDescription . '</p>
                 <p class="price-text">' . $products->price . ' kr/dag</p>
                 <p class="date-text">' . $products->uploadDate . '</p>';
-            if ($username == $products->username) {
-                echo ' <label for="redigera" >
+
+        if ($username == $products->username) {
+            echo ' <label for="redigera" >
                             <form action="/products/edit/' . $products->productId . '">
                                 <input class="btn btn-login" type="submit" name="redigera" value="Redigera">
                             </form>
                         </label>';
-            }
-            ?>
+        }
+        ?>
         </div>
-        </div>
-        </div>
-
-        <?php navbar(); ?>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        </body>
-        </html>
-        <?php
+       <?php
+        navbar();
+        script();
+        endTags();
     }
 
     public function editProduct(string $ProductId)
     {
+        \App\Database::isLoggedIn();
 
-        if (!$ProductId) {
-//                redirectHome();
-            echo "inget id";
+        $username = $_SESSION['username'];
+
+        $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
+        $product = ltrim($productId, "/products/edit/");
+        if (!$product || !$productId) {
+            echo "inget produkt ID";
             exit();
         }
+        $userProduct = <<<EOD
+        select username 
+        from products
+        where productId like ?
+        EOD;
+        $stmt = db()->prepare($userProduct);
+        $stmt->execute([$product]);
+        $userProduct = $stmt->fetch(PDO::FETCH_OBJ);
 
-        $errors = $_SESSION["errors"] ?? false;
-        $fields = $_SESSION["fields"] ?? [];
-
-        $host = "192.168.250.74";
-        $db = "ga-lou";
-        $user = "ga-lou";
-        $password = "rödbrunrånarluva";
-        $dsn = "mysql:host=$host;port=3306;dbname=$db;charset=UTF8";
-        $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if (!($userProduct->username == $username)) {
+            SimpleRouter::response()->redirect("/products/");
+            exit();
+        }
 
         $productType = <<<EOD
         SELECT productTypeId, productTypeName
@@ -335,6 +291,19 @@ class productsController
         $stmt = db()->prepare($productDesc);
         $stmt->execute();
         $productValues = $stmt->fetch(PDO::FETCH_OBJ);
+
+        $errors = $_SESSION["errors"] ?? false;
+        $fields = $_SESSION["fields"] ?? [];
+
+        $host = "192.168.250.74";
+        $db = "ga-lou";
+        $user = "ga-lou";
+        $password = "rödbrunrånarluva";
+        $dsn = "mysql:host=$host;port=3306;dbname=$db;charset=UTF8";
+        $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 //        var_dump($productValues);
         if ($errors) {
             foreach ($errors as $errorMSG) {
@@ -343,25 +312,10 @@ class productsController
         }
         ?>
         <!doctype html>
-        <html lang="sv">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Document</title>
-        </head>
-        <body>
-        <?php profilIcon(); ?>
-        <nav class="navbar navbar-light nav-icon-placement">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
+        <?php head();
+        navbarButton();
+        profilIcon();
+        ?>
         <br>
         <br>
         <div class="containerborder">
@@ -407,19 +361,17 @@ class productsController
                 </div>
             </form>
         </div>
-        <?php navbar(); ?>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        </body>
-        </html>
         <?php
+        navbar();
+        script();
+        endTags();
 //        echo 'id ' . $ProductId;
     }
 
     public function storeProduct()
     {
+        \App\Database::isLoggedIn();
+
         $host = "192.168.250.74";
         $db = "ga-lou";
         $user = "ga-lou";
@@ -455,6 +407,7 @@ class productsController
                     $image = 'data:image/' . $imageFileType . ';base64,' . $image_base64;
                     // Insert record
 
+
                     $productId = random_int(0, 100000);
                     $productTitle = $_POST["productTitle"] ?? "Namn saknas";
                     $productDescription = $_POST["productDescription"] ?? "Beskrivning saknas";
@@ -481,6 +434,8 @@ class productsController
 
     public function update(string $ProductId)
     {
+        \App\Database::isLoggedIn();
+
         if (!$ProductId || !filter_var($ProductId, FILTER_VALIDATE_INT)) {
             redirectHome();
             exit();
@@ -508,7 +463,7 @@ class productsController
             'productDescription' => FILTER_SANITIZE_STRING,
             'productTypeId' => [
                 'filter' => FILTER_VALIDATE_INT,
-                'options' => ['min_range' => 0, 'max_range' => 3]
+                'options' => ['min_range' => 0]
 
             ]
         );
@@ -567,6 +522,8 @@ class productsController
 
     public function upload()
     {
+        \App\Database::isLoggedIn();
+
         $productTypes = <<<EOD
         select productTypeId,productTypeName
         from productTypes 
@@ -589,16 +546,10 @@ class productsController
         ?>
 
         <!doctype html>
-        <html lang="sv">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Document</title>
-        </head>
-        <body>
-        <?php profilIcon(); ?>
+        <?php head();
+        navbarButton();
+        profilIcon();
+        ?>
         <div class="containerborder">
             <div class="center mb-4 m-top">
                 <a href="/products/user"> Tillbaka</a>
@@ -639,13 +590,10 @@ class productsController
                 </div>
             </form>
         </div>
-        <?php navbar(); ?>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        </body>
-        </html>
         <?php
+        navbar();
+        script();
+        endTags();
     }
 
     public function userProduct()
@@ -687,29 +635,10 @@ class productsController
 
         ?>
         <!doctype html>
-        <html lang="sv">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-                  crossorigin="anonymous">
-            <link rel="stylesheet" href="../index.css?v=1">
-            <title>Userproducts</title>
-        </head>
-        <body>
-        <?php profilIcon() ?>
-        <nav class="navbar navbar-light nav-icon-placement">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
+        <?php head();
+        navbarButton();
+        profilIcon();
+        ?>
         <div class="center mb-4" id="editMargin">
             <a href="/products/"> Tillbaka</a>
             <h1> Dina produkter</h1>
@@ -741,16 +670,10 @@ class productsController
                 </div>';
             }
             ?>
-
         </div>
-        <?php navbar(); ?>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        </body>
-        </html>
         <?php
-
-
+        navbar();
+        script();
+        endTags();
     }
 }

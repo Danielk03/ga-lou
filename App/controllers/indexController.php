@@ -43,6 +43,6 @@ class indexController
         </div>
         </body>
         </html>
-      <?php
+        <?php
     }
 }
