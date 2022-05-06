@@ -75,8 +75,6 @@ class authController
 //        SimpleRouter::response()->redirect("/authe/");
 //        exit();
         ?>
-
-
         <!--        bekräfta att man verkligen vill radera sitt konto. inget händer när man har tryckt på någon av knapparna. De borde visa
                     en post action och därmed fungera -->
 
@@ -84,17 +82,17 @@ class authController
         <?php head();
         navbarButton();
         profilIcon();
+        var_dump($_POST);
         ?>
-        <div class="containerborder">
             <div id='container' class='m-top center mb-4'>
                 <form method="post" action=" ">
                     <label class='form-label'> Vill du verkligen radera ditt konto?
                         <div class="m-above">
                             <input class='btn btn-login' name="deleteAccount" type='submit' value='Ta bort konto'>
                         </div>
-                        <div class="m-above">
-                            <input class='btn btn-cancell' name="back" type='submit' value='Tillbaka'>
-                        </div>
+<!--                        <div class="m-above">-->
+<!--                            <input class='btn btn-cancell' name="back" type='submit' value='Tillbaka'>-->
+<!--                        </div>-->
                     </label>
                 </form>
             </div>
@@ -270,7 +268,7 @@ class authController
             <div class="mb-4">
                 <label for="password" class="form-label">Löserord
                     <input type="text" class="form-control" name="password"
-                           value="<?php echo $userInfo->password ?>">
+                           value=" ">
                 </label>
             </div>
             <div class="center">

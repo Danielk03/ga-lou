@@ -12,9 +12,7 @@ class productsController
     {
         //kollar om man är inloggad
         \App\Database::isLoggedIn();
-
         $userName = $_SESSION["username"];
-
         // Tar in all data som krävs från databas
         $products = <<<EOD
         select * from products;
@@ -60,7 +58,6 @@ class productsController
         ?>
         <br>
         <br>
-        <div class="containerborder">
             <form action=" " method="get">
                 <div class="container center">
                     <div class="row">
@@ -221,7 +218,6 @@ class productsController
         profilIcon();
 
         echo '
-        <div class="containerborder">
         <div class="col m-above">
         <div class="card h-100" >
             <img src="' . $products->image . '" alt="KO" style="max-height: 200vh ; object-fit: cover">
@@ -318,7 +314,6 @@ class productsController
         ?>
         <br>
         <br>
-        <div class="containerborder">
             <div class="center mb-4 ">
                 <a href="/products/user"> Tillbaka</a>
                 <h1> Redigera Annons</h1>
@@ -376,7 +371,6 @@ class productsController
         $db = "ga-lou";
         $user = "ga-lou";
         $password = "rödbrunrånarluva";
-
         $dsn = "mysql:host=$host;port=3306;dbname=$db;charset=UTF8";
         $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -490,12 +484,6 @@ class productsController
         } else {
             $errors[] = 'Det blev ett internt fel.';
         }
-//        var_dump($ProductId);
-//        var_dump($typeId);
-//        var_dump($title);
-//        var_dump($description);
-//        var_dump($username);
-//        var_dump($price);
 
         if (count($errors)) {
             $_SESSION["errors"] = $errors;
@@ -550,7 +538,6 @@ class productsController
         navbarButton();
         profilIcon();
         ?>
-        <div class="containerborder">
             <div class="center mb-4 m-top">
                 <a href="/products/user"> Tillbaka</a>
                 <h1> Lägg till annons</h1>
@@ -606,11 +593,9 @@ class productsController
             select *
             from productTypes;
             EOD;
-
         $stmt = db()->prepare($productType);
         $stmt->execute();
         $productTypes = $stmt->fetchAll();
-        //        var_dump($productTypes);
 
         $query = <<<EOD
             select * from users;
@@ -618,17 +603,16 @@ class productsController
         $stmt = db()->prepare($query);
         $stmt->execute();
         $results = $stmt->fetchAll();
-        //        var_dump($results);
 
         $products = <<<EOD
             select * from products
             where username = ?;
             EOD;
-
         $stmt = db()->prepare($products);
         $stmt->execute([$userName]);
         $products = $stmt->fetchAll(PDO::FETCH_OBJ);
         $username = $_SESSION['username'];
+
         $productId = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
         //        var_dump($productId);
         $product = ltrim($productId, "/products/details/");

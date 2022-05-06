@@ -53,29 +53,28 @@ class Database
             return false;
         }
 //        self::validateUser();
-        $newUserName = $_POST["username"] ?? null;
-        $newPassword = $_POST["password"] ?? null;
+        $UserName = $_POST["username"] ?? null;
+        $Password = $_POST["password"] ?? null;
 
-
-        $query = "select username from users where username = ? and password = ?;";
+        $query = "select username, password from users where username = ?";
         $rules = [
             'username' => FILTER_SANITIZE_STRING,
             'password' => FILTER_SANITIZE_STRING,
         ];
-        $newUserName = $validatedInput['username'] ?? null;
-        $newPassword = $validatedInput['password'] ?? null;
+        $UserName = $validatedInput['username'] ?? null;
+        $Password = $validatedInput['password'] ?? null;
 
         $validatedInput = filter_input_array(INPUT_POST, $rules);
 
         $errors = [];
 
         if ($validatedInput['username']) {
-            $newUserName = $validatedInput['username'];
+            $UserName = $validatedInput['username'];
         } else {
             $errors[] = 'Felaktigt username';
         }
         if ($validatedInput['password']) {
-            $newPassword = $validatedInput['password'];
+            $Password = $validatedInput['password'];
         } else {
             $errors[] = 'Felaktig beskrivning';
         }
@@ -86,34 +85,44 @@ class Database
             redirect($_SERVER["HTTP_REFERER"]);
             exit();
         }
-        $stmt = Database::getInstance()->getPDO()->prepare($query);
-        $stmt->execute([$newUserName, $newPassword]);
-        $user = $stmt->fetch();
 
-        if ($user) {
+        $stmt = Database::getInstance()->getPDO()->prepare($query);
+        $stmt->execute([$UserName]);
+        $user = $stmt->fetch();
+        if(password_verify($_POST['password'], $user->password)) {
             $_SESSION["username"] = $user->username;
-//            header("Location: index.php");
             SimpleRouter::response()->redirect("/authe");
-        } else {
-            echo "Något gick fel";
+        } else{
+            echo "Användarnamn existerar inte eller är lösenordet fel";
         }
         return false;
     }
 
     public static function update()
     {
-        $username = $_SESSION['username'];
         var_dump($_POST);
-        $oldUsername=$_POST['username'];
+        $oldUsername = $_SESSION['username'];
         $oldPassword = $_POST['password'];
+        var_dump($oldUsername);
+        $userId = <<<EOD
+        select userId 
+        from users
+        WHERE username = '$oldUsername'
+    EOD;
+        $stmt = db()->prepare($userId);
+        $stmt->execute();
+        $userId = $stmt->fetch(PDO::FETCH_COLUMN);
+        var_dump($userId);
 
         $rules = array(
             'username'=>  FILTER_SANITIZE_STRING,
             'password'   => FILTER_SANITIZE_STRING
         );
 
-        $oldUsername = $validatedInput['username'] ?? null;
         $oldPassword = $validatedInput['password'] ?? null;
+        $newPassword = $_POST['password'] ?? null;
+        $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $newUsername = $validatedInput['username'] ?? null;
 
         $validateInput = filter_input_array(INPUT_POST, $rules);
 
@@ -137,14 +146,17 @@ class Database
             echo  "fel!!";
             exit();
         }
+        var_dump($validatedUsername);
+
         $updateUser = <<<EOD
-            UPDATE users
-            SET  password =?
-            WHERE  username = '$username'; 
-        EOD;
+        UPDATE users
+        SET  password = '$newPassword', username = '$validatedUsername'
+        WHERE  userId = '$userId' 
+    EOD;
+        var_dump($updateUser);
 
         $stmt = db()->prepare($updateUser);
-        $stmt->execute([$validatedPassword]);
+        $stmt->execute();
         SimpleRouter::response()->redirect("/authe/");
 
     }
@@ -157,82 +169,30 @@ class Database
 //        self::validateUser();
         $newUserName = $_POST["username"] ?? null;
         $newPassword = $_POST["password"] ?? null;
+        $userId = random_int(0, 100000);
         $newMail = $_POST["userMail"] ?? null;
         $newPhoneNumber = $_POST["userPhoneNumber"] ?? null;
 
         var_dump($newUserName);
         var_dump($newPassword);
+        var_dump($userId);
         var_dump($newPhoneNumber);
         var_dump($newMail);
 
-        $query = "select username 
-                from users 
-                where username = ? 
-                and password = ?;
-                 ";
-
-        $rules = [
-            'username' => FILTER_SANITIZE_STRING,
-            'password' => FILTER_SANITIZE_STRING,
-            'userPhoneNumber' => FILTER_VALIDATE_INT,
-            'userMail' => FILTER_SANITIZE_STRING,
-        ];
-        $validatedInput = filter_input_array(INPUT_POST, $rules);
-        $newUserName = $validatedInput['username'] ?? null;
-        $newPassword = $validatedInput['password'] ?? null;
-        $newPhoneNumber = $validatedInput['userPhoneNumber'] ?? null;
-        $newMail = $validatedInput['userMail'] ?? null;
-
-        var_dump($newUserName);
-        var_dump($newPassword);
-        var_dump($newPhoneNumber);
-        var_dump($newMail);
-
-        $errors = [];
-
-        if ($validatedInput['username']) {
-            $newUserName = $validatedInput['username'];
-        } else {
-            $errors[] = 'Felaktigt användarnamn';
-        }
-        if ($validatedInput['password']) {
-            $newPassword = $validatedInput['password'];
-        } else {
-            $errors[] = 'Felaktigt lösenord';
-        }
-        if ($validatedInput['userPhoneNumber']) {
-            $newPhoneNumber = $validatedInput['userPhoneNumber'];
-        } else {
-            $errors[] = 'Felaktigt tele num';
-        }
-        if ($validatedInput['userMail']) {
-            $newMail = $validatedInput['userMail'];
-        } else {
-            $errors[] = 'Felaktigt mail';
-        }
 
 
-        if (count($errors)) {
-            $_SESSION["errors"] = $errors;
-            $_SESSION["fields"] = $_POST;
-            redirect($_SERVER["HTTP_REFERER"]);
-            exit();
-        }
+        $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
         $insertUser =  <<< EOD
-        insert into users(username, password,userMail,userTeleNumber)
-        VALUES (?,?,?,?);
+        insert into users(username, password,userId, userMail,userTeleNumber)
+        VALUES ('$newUserName','$newPassword','$userId','$newMail','$newPhoneNumber');
         EOD;
 
-        $stmt = db()->prepare($insertUser);
-        $stmt->execute([$newUserName,$newPassword,$newMail,$newPhoneNumber]);
-        $userINFO = $stmt->fetch(PDO::FETCH_OBJ);
-        var_dump($userINFO);
 
 
-        $stmt = Database::getInstance()->getPDO()->prepare($query);
-        var_dump($query);
-        $success = $stmt->execute([$newUserName, $newPassword]);
+        $stmt = Database::getInstance()->getPDO()->prepare($insertUser);
+        var_dump($insertUser);
+        $success = $stmt->execute();
         var_dump($success);
         if ($success) {
             $_SESSION["username"] = $newUserName;
